@@ -1,0 +1,33 @@
+{
+  "name": "RETRO-CAST",
+  "version": "v1",
+  "n": 5000,
+  "seed": 42,
+  "window": {
+    "start": "2016-01-01",
+    "end": "2026-06-01"
+  },
+  "strata": {
+    "domains": [
+      "security",
+      "energy",
+      "macro",
+      "tech",
+      "climate"
+    ],
+    "horizons": [
+      30,
+      90,
+      180,
+      365
+    ],
+    "families": [
+      "series_threshold",
+      "event_count"
+    ],
+    "cells": 40,
+    "min_cell": 125
+  },
+  "sha256": "bf1f9c8f47b76619f9f7185a09ef7315f44f99895b8d9e2b8eab5279c40770a1",
+  "frozen_at": "2026-07-02T19:24:58Z"
+}

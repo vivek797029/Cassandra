@@ -1,0 +1,15 @@
+ARGUS Copilot {{ .Chart.AppVersion }} deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+Image:    {{ include "argus.image" . }}
+Replicas: {{ if .Values.autoscaling.enabled }}{{ .Values.autoscaling.minReplicas }}–{{ .Values.autoscaling.maxReplicas }} (HPA){{ else }}{{ .Values.replicaCount }}{{ end }}
+Auth:     {{ if eq (toString (index .Values.env "ARGUS_AUTH_ENABLED")) "1" }}ENABLED (OIDC/JWT){{ else }}disabled (dev){{ end }}
+{{- if .Values.secret.name }}
+Secrets:  injected from Secret "{{ .Values.secret.name }}" (create it before install).
+{{- else }}
+Secrets:  none referenced (dev).
+{{- end }}
+
+Check rollout:
+  kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "argus.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "argus.fullname" . }} 8000:{{ .Values.service.port }}
+  curl -s localhost:8000/readyz

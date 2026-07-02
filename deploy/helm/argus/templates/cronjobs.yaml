@@ -1,0 +1,38 @@
+{{- $top := . -}}
+{{- range $name, $job := .Values.cronjobs }}
+{{- if and (kindIs "map" $job) $job.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "argus.fullname" $top }}-{{ $name }}
+  namespace: {{ $top.Release.Namespace }}
+  labels:
+    {{- include "argus.labels" $top | nindent 4 }}
+spec:
+  schedule: {{ $job.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "argus.serviceAccountName" $top }}
+          securityContext:
+            {{- toYaml $top.Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: {{ $name }}
+              image: {{ include "argus.image" $top | quote }}
+              imagePullPolicy: {{ $top.Values.image.pullPolicy }}
+              command: {{ toJson $job.command }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "argus.fullname" $top }}-env
+                {{- if $top.Values.secret.name }}
+                - secretRef:
+                    name: {{ $top.Values.secret.name }}
+                {{- end }}
+              resources:
+                {{- toYaml $top.Values.cronjobs.resources | nindent 16 }}
+{{- end }}
+{{- end }}

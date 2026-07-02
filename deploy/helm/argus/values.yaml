@@ -1,0 +1,85 @@
+# ARGUS Helm chart — base values (Task 78). Override per environment with
+# values-dev.yaml / values-prod.yaml. Secrets are NEVER stored here: the chart
+# references an existing Kubernetes Secret (see `secret.name`).
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: registry.internal/argus/copilot-api
+  tag: ""                       # defaults to .Chart.AppVersion when empty (CI may stamp a digest)
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+# Non-secret environment (rendered into a ConfigMap).
+env:
+  ARGUS_FAST: "0"               # full-fidelity bands in cluster
+  ARGUS_DB: /data/copilot.db
+  ARGUS_CORS_ORIGINS: "https://argus.internal"
+  ARGUS_AUTH_ENABLED: "1"
+
+# Secret reference (Task 78): the named Secret's keys are injected as env vars
+# (DATABASE_URL, ARGUS_JWT_SECRET, OIDC_JWKS_URL, HUGGING_FACE_HUB_TOKEN, ...).
+# Create it out-of-band: kubectl -n <ns> create secret generic argus-secrets --from-literal=...
+secret:
+  name: argus-secrets           # set to "" to disable (e.g. dev)
+
+resources:
+  requests: { cpu: "500m", memory: 1Gi }
+  limits:   { cpu: "2", memory: 4Gi }
+
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: argus.internal
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
+
+# Nightly batch jobs (mirror deploy/k8s/argus.yaml).
+cronjobs:
+  pipeline:
+    enabled: true
+    schedule: "0 2 * * *"
+    command: ["python", "pipeline.py"]
+  retrain:
+    enabled: true
+    schedule: "30 3 * * *"
+    command: ["python", "-m", "workers.retrain.daily", "--force"]
+  bands:
+    enabled: true
+    schedule: "0 1 * * *"
+    command: ["python", "-m", "workers.bands.refresh"]   # Task 83: full-fidelity bands → PG
+  resources:
+    requests: { cpu: "2", memory: 4Gi }
+    limits:   { cpu: "4", memory: 8Gi }
+
+# Optional vLLM NLU-assist wiring (Task 76); when enabled, adds ARGUS_LLM_* to env.
+llm:
+  enabled: false
+  url: "http://vllm:8000/v1"
+  model: "Qwen2.5-1.5B-Instruct"
+
+serviceAccount:
+  create: true
+  name: ""
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001

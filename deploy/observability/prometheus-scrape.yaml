@@ -1,0 +1,11 @@
+# Task 79 — Prometheus scrape config for the ARGUS Copilot API.
+# Drop into prometheus.yml `scrape_configs:` (or a kube-prometheus ServiceMonitor).
+scrape_configs:
+  - job_name: argus-copilot
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      - targets: ["copilot-api.argus.svc:80"]   # in-cluster Service (helm: <release>-argus-copilot)
+        labels:
+          service: argus-copilot
+          env: prod

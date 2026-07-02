@@ -1,0 +1,160 @@
+name: argus-ci
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: |
+          pip install -r requirements.txt -r requirements-api.txt -r requirements-ingest.txt
+          pip install pytest
+      - name: Engine smoke tests (14)
+        run: python tests/test_smoke.py
+      - name: Unit + API + ingest tests
+        run: python -m pytest tests/ -q
+      - name: Benchmark SLO gate
+        run: python benchmarks/bench_api.py
+      - name: NLU-assist latency gate (Task 76 — vLLM p95 < 300 ms, in-process mock)
+        run: python benchmarks/bench_nlu_assist.py
+      - name: Ratchet regression gate (Task 94 — no regression vs frozen baselines)
+        run: python -m workers.ratchet.rack --gate
+      - name: Pipeline end-to-end (fast)
+        run: python pipeline.py --fast
+      - name: Phase-2 stack verification (static layer)
+        run: |
+          pip install pglast pyyaml
+          python scripts/verify_phase2_stack.py
+      - name: Red-team gates (theta-ball flip rate + source ablation + injection corpus)
+        run: python -m pytest tests/redteam -q -s
+      - name: NLU contamination gate (Task 68 — canary drift + injection-canary leakage)
+        run: python -m services.copilot.nlu --gate
+      - name: Chaos test — graceful degradation (Task 70 — engine-down → cached + staleness)
+        run: python -m pytest tests/test_degradation.py -q
+
+  test-pg:                     # Task 40 gate: full suite against real PostgreSQL
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_DB: argus, POSTGRES_USER: argus, POSTGRES_PASSWORD: argus-dev-only }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U argus -d argus"
+          --health-interval 5s --health-timeout 3s --health-retries 12
+    env:
+      DATABASE_URL: postgresql://argus:argus-dev-only@localhost:5432/argus
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: |
+          pip install -r requirements.txt -r requirements-api.txt -r requirements-ingest.txt
+          pip install pytest pglast
+      - name: Full test suite on PostgreSQL (store, API, ingest sink)
+        run: python -m pytest tests/ -q
+
+  frontend:                    # Task 58: type-check + vite build gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install + build (tsc strict + vite)
+        working-directory: frontend/react
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Frontend image (size-gated < 50 MB)
+        run: |
+          docker build -f deploy/docker/Dockerfile.frontend -t argus/frontend:${{ github.sha }} .
+          SIZE=$(docker image inspect argus/frontend:${{ github.sha }} --format='{{.Size}}')
+          echo "image size: $SIZE bytes"
+          test "$SIZE" -lt 52428800
+
+  loadtest:                    # Task 69: 100-user mixed-intent load test (cached p99 < 1s gate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install -r requirements.txt -r requirements-api.txt -r requirements-bench.txt
+      - name: Locust load test (100 users, mixed intents; gate cached p99 < 1s, 0 failures)
+        env: { API_WORKERS: "2", LOCUST_USERS: "100", LOCUST_SPAWN: "50", LOCUST_RUNTIME: "20s" }
+        run: python benchmarks/run_locust.py
+
+  helm:                        # Task 78: chart lint + render for each environment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with: { version: v3.14.4 }
+      - name: helm lint (dev + prod values)
+        run: |
+          helm lint deploy/helm/argus -f deploy/helm/argus/values-dev.yaml
+          helm lint deploy/helm/argus -f deploy/helm/argus/values-prod.yaml
+      - name: helm template renders clean (install dry-run equivalent)
+        run: |
+          helm template argus deploy/helm/argus -f deploy/helm/argus/values-dev.yaml  > /dev/null
+          helm template argus deploy/helm/argus -f deploy/helm/argus/values-prod.yaml > /dev/null
+
+  alerts:                      # Task 81: Prometheus rule lint + synthetic-breach unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install promtool
+        run: |
+          VER=2.53.0
+          curl -fsSL -o p.tgz https://github.com/prometheus/prometheus/releases/download/v${VER}/prometheus-${VER}.linux-amd64.tar.gz
+          tar xzf p.tgz
+          sudo install prometheus-${VER}.linux-amd64/promtool /usr/local/bin/promtool
+      - name: Lint rules + run synthetic-breach tests
+        working-directory: deploy/observability
+        run: |
+          promtool check rules alerts.yaml
+          promtool test rules alerts_test.yaml
+
+  openapi:                     # Task 71: versioned OpenAPI export — drift gate + published artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install -r requirements.txt -r requirements-api.txt
+      - name: OpenAPI drift gate (committed artifact matches the live schema)
+        run: python scripts/export_openapi.py --check
+      - name: Publish OpenAPI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-v1.0.0-${{ github.sha }}
+          path: docs/openapi/
+
+  docker:
+    needs: [test, test-pg, frontend, loadtest, openapi]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Change-control freeze gate (Task 99 — blocks releases mid-freeze)
+        run: python scripts/change_control.py
+      - name: Build image
+        run: docker build -f deploy/docker/Dockerfile.api -t argus/copilot-api:${{ github.sha }} .
+      - name: Container smoke test
+        run: |
+          docker run -d --name argus -p 8000:8000 argus/copilot-api:${{ github.sha }}
+          sleep 45
+          curl -sf localhost:8000/readyz
+          curl -sf -X POST localhost:8000/v1/ask -H 'Content-Type: application/json' \
+            -d '{"text":"chance of global recession?"}' | grep -q probability
+      # push step gated on registry secrets (Phase 3)
+      # - run: docker push registry.internal/argus/copilot-api:${{ github.sha }}

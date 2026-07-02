@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CASSANDRA Core — Strategic Forecasting Dashboard</title>
+<style>
+  :root { --navy:#1f4e79; --navy2:#0b2b4c; --red:#c00000; --bg:#f5f7fa; --card:#ffffff; --grey:#5b6770; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif; background:var(--bg); color:#1c2733; }
+  header { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:#fff; padding:18px 28px; }
+  header h1 { margin:0; font-size:20px; letter-spacing:.5px; }
+  header p { margin:4px 0 0; font-size:12px; opacity:.85; }
+  .banner { background:var(--red); color:#fff; text-align:center; font-size:11px; padding:3px; letter-spacing:1px; }
+  nav { display:flex; flex-wrap:wrap; gap:4px; padding:10px 24px; background:#fff; border-bottom:1px solid #dde3ea; position:sticky; top:0; z-index:5; }
+  nav button { border:1px solid #ccd6e0; background:#fff; padding:7px 14px; border-radius:18px; font-size:12.5px; cursor:pointer; color:var(--navy2); }
+  nav button.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+  main { padding:20px 26px 60px; max-width:1180px; margin:0 auto; }
+  .card { background:var(--card); border:1px solid #e3e9f0; border-radius:10px; padding:16px 18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(15,40,70,.06); }
+  .card h2 { margin:0 0 10px; font-size:15px; color:var(--navy2); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:16px; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th { background:var(--navy); color:#fff; padding:6px 8px; text-align:left; font-weight:600; }
+  td { padding:6px 8px; border-bottom:1px solid #eef2f6; vertical-align:top; }
+  tr:nth-child(even) td { background:#f3f7fb; }
+  .bar-row { display:flex; align-items:center; gap:8px; margin:7px 0; font-size:12px; }
+  .bar-label { width:300px; flex-shrink:0; }
+  .bar-track { flex:1; height:16px; background:#e8edf3; border-radius:8px; position:relative; overflow:visible; }
+  .bar-fill { height:100%; background:var(--navy); border-radius:8px; }
+  .bar-band { position:absolute; top:5px; height:6px; background:var(--red); border-radius:3px; opacity:.85; }
+  .bar-val { width:130px; font-variant-numeric:tabular-nums; }
+  .pill { display:inline-block; padding:2px 9px; border-radius:10px; font-size:11px; background:#e8eef5; color:var(--navy2); margin:2px 3px 2px 0; }
+  .tag-fact { color:var(--navy); font-weight:700; } .tag-fc { color:var(--red); font-weight:700; }
+  .muted { color:var(--grey); font-size:11.5px; }
+  img.chart { width:100%; border:1px solid #e3e9f0; border-radius:8px; margin:6px 0; }
+  section { display:none; } section.active { display:block; }
+  .kpi { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+  .kpi div { background:var(--card); border:1px solid #e3e9f0; border-radius:10px; padding:12px 16px; min-width:150px; }
+  .kpi b { display:block; font-size:21px; color:var(--navy2); }
+  .kpi span { font-size:11px; color:var(--grey); }
+  details { margin:6px 0; } summary { cursor:pointer; font-weight:600; font-size:13px; color:var(--navy2); }
+  .verdict-f { color:var(--red); font-weight:600; } .verdict-r { color:#1c7a3d; font-weight:600; } .verdict-s { color:#b75d00; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="banner">OPEN-SOURCE ANALYTIC EXERCISE — MODEL-CONDITIONED PROBABILITIES, NOT MEASURED FREQUENCIES</div>
+<header>
+  <h1>CASSANDRA CORE — National Strategic Intelligence &amp; Societal Forecasting</h1>
+  <p id="meta"></p>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+<script>
+const R = /*__REPORT_JSON__*/null;
+const TABS = ["Overview","Forecasts","Scenarios","Novelty Lab","Policy Engine","Early Warning","Red Team","Evidence"];
+const nav = document.getElementById("nav"), main = document.getElementById("main");
+document.getElementById("meta").textContent =
+  `${R.meta.system} · evidence as of ${R.meta.as_of} · ${R.meta.pipeline}` + (R.meta.fast_mode ? " · FAST MODE" : "");
+
+const fmt = p => p==null ? "—" : (p*100).toFixed(0)+"%";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+function bar(label, center, lo, hi){
+  const c=(center*100).toFixed(1);
+  const band = (lo!=null&&hi!=null)?`<div class="bar-band" style="left:${lo*100}%;width:${Math.max(1,(hi-lo)*100)}%"></div>`:"";
+  const v = (lo!=null)?`${c}% <span class="muted">[${(lo*100).toFixed(0)}–${(hi*100).toFixed(0)}]</span>`:`${c}%`;
+  return `<div class="bar-row"><div class="bar-label">${esc(label)}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${center*100}%"></div>${band}</div>
+    <div class="bar-val">${v}</div></div>`;
+}
+function table(headers, rows){
+  return `<table><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr>
+    ${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+
+const S = {};
+
+S["Overview"] = () => {
+  const ev = R.phase5_7_forecasts.event_probabilities, cal = R.phase5_7_forecasts.calibration_2026H2;
+  return `
+  <div class="kpi">
+    <div><b>${fmt(ev.ME_war_1y)}</b><span>ME war re-ignition &lt;1y</span></div>
+    <div><b>${fmt(ev.Hormuz_closure_by_end2027)}</b><span>Hormuz re-closure ≤2027</span></div>
+    <div><b>${fmt(ev.Global_recession_lt2p5_by_2028)}</b><span>growth &lt;2.5% by 2028</span></div>
+    <div><b>${fmt(ev.Dem_House_Nov2026)}</b><span>Dem House Nov-2026</span></div>
+    <div><b>${fmt(ev.TW_blockade_by_2030)}</b><span>Taiwan blockade by 2030</span></div>
+  </div>
+  <div class="card"><h2>Ensemble fans (calibration-trained θ)</h2><img class="chart" src="charts/fans.png"></div>
+  <div class="card"><h2>Model honesty</h2>
+    <p class="muted">2026-H2 model means vs anchors: growth ${cal.growth_mean} (IMF ${cal.anchors.imf_growth}) ·
+    inflation ${cal.inflation_mean} (IMF ${cal.anchors.imf_inflation}) · Brent $${cal.oil_mean} (spot $${cal.anchors.brent_spot}).
+    Sampling error ±${(R.phase5_7_forecasts.mc_se_95*100).toFixed(1)}pp; structural uncertainty dominates — see Red Team.</p></div>
+  <div class="card"><h2>Situation facts (Phase 1)</h2>
+    ${table(["#","Domain","Fact","Source"], R.phase1_situation.map(f=>[f.id,f.domain,esc(f.text),`<span class="muted">${esc(f.source)}</span>`]))}</div>`;
+};
+
+S["Forecasts"] = () => {
+  const ev = R.phase5_7_forecasts.event_probabilities, rb = R.novelty_robust_bands;
+  const rows = Object.entries(ev).filter(([k,v])=>v!=null).map(([k,v])=>{
+    const b = rb[k]; return bar(k.replaceAll("_"," "), v, b?b.lo:null, b?b.hi:null);
+  }).join("");
+  return `<div class="card"><h2>Event probabilities — bar = center, red strip = adversarial-conformal band</h2>${rows}</div>
+  <div class="card"><h2>Signals (Phase 2)</h2>
+    ${table(["Signal","Strength","Reliability","Growth","Horizon","Impact"],
+      R.phase2_signals.map(s=>[esc(s.name),s.strength,s.reliability,s.growth,s.horizon,esc(s.impact)]))}</div>
+  <div class="card"><h2>Causal weights (Phase 3) — expert prior vs perturbation-verified</h2>
+    ${table(["Channel","Prior %"], Object.entries(R.phase3_causal.expert_prior_weights_pct).map(([k,v])=>[esc(k),v]))}
+    <p class="muted">Simulator-verified sensitivity shares: ${Object.entries(R.phase3_causal.perturbation_verified_weights_pct).map(([k,v])=>`${esc(k)}: ${v}%`).join(" · ")}</p></div>`;
+};
+
+S["Scenarios"] = () => {
+  const c = R.phase8_scenarios.clusters;
+  return `<div class="card"><h2>Scenarios — discovered by clustering 20k ensemble paths (Phase 8)</h2>
+    ${table(["Scenario","Ensemble share","Max oil (med)","Worst annual growth (med)","War quarters (med)","Taiwan event rate","Mean inflation (med)"],
+      c.map(o=>[esc(o.scenario),fmt(o.share),"$"+o.max_oil_med,o.min_annual_growth_med+"%",o.war_quarters_med,fmt(o.taiwan_event_rate),o.mean_inflation_med+"%"]))}
+    <p class="muted">${esc(R.phase8_scenarios.note)}</p></div>
+  <div class="card"><h2>Historical analogs (Phase 4)</h2>
+    ${R.phase4_analogs.map(a=>`<details><summary>${esc(a.name)} — similarity ${a.similarity}</summary>
+      <p><b>Similar:</b> ${esc(a.similar)}<br><b>Different:</b> ${esc(a.different)}<br><b>Outcome:</b> ${esc(a.outcome)}<br>
+      <b>Lesson:</b> ${esc(a.lesson)}<br><span class="muted">Policy success: ${esc(a.policy_success)} · failure: ${esc(a.policy_failure)}</span></p></details>`).join("")}</div>`;
+};
+
+S["Novelty Lab"] = () => {
+  const c = R.novelty_calibration;
+  return `<div class="card"><h2>Novelty 1 — Calibration-trained simulator (SPSA on Brier vs resolved events)</h2>
+    <p class="muted">The causal mechanism parameters θ are trained end-to-end on a proper scoring rule against the leakage-firewalled Feb→Jun 2026 replay window. Brier ${c.brier_before} → <b>${c.brier_after}</b>; log score ${c.log_before} → <b>${c.log_after}</b>.</p>
+    <img class="chart" src="charts/calibration.png">
+    ${table(["Resolved event","Outcome","P before","P after"], c.events.map(e=>[esc(e.event),e.outcome,e.p_before,e.p_after]))}
+    <details><summary>θ before → after</summary>${table(["Parameter","Before","After"],
+      Object.keys(c.theta_before).map(k=>[k,c.theta_before[k],c.theta_after[k]]))}</details></div>
+  <div class="card"><h2>Novelty 2+3 — Adversarial min-max bands + conformal widening</h2>
+    <p class="muted">A red-team optimizer extremizes each forecast over a plausibility ball in θ-space; bands are then widened by the conformal quantile of replay residuals. Read: “no defensible parameterization moves the number outside the strip.”</p>
+    <img class="chart" src="charts/robust_bands.png"></div>`;
+};
+
+S["Policy Engine"] = () => {
+  const p = R.phase10_policy;
+  return `<div class="card"><h2>Novelty 4 / Phase 10 — Intervention portfolio (greedy EV search, budget ${p.budget})</h2>
+    <p>Base harm index <b>${p.base_harm}</b> → portfolio harm <b>${p.portfolio_harm}</b> (−${p.harm_reduction_pct}%). Selected: ${p.portfolio.map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</p>
+    ${table(["Step","Added","Cost","Harm after","Marginal value/cost"], p.greedy_steps.map((s,i)=>[i+1,esc(s.added),s.cost,s.portfolio_harm,s.marginal_value_per_cost]))}
+    <h2 style="margin-top:14px">Single-intervention ranking</h2>
+    ${table(["Intervention","Cost","Harm reduction","Value per cost","Description"],
+      p.singles_ranked.map(s=>[esc(s.name),s.cost,s.harm_reduction,s.value_per_cost,`<span class="muted">${esc(s.desc)}</span>`]))}
+    <p class="muted">Harm functional = E[recession-quarters + war-quarters + 0.6·defaults + 0.5·excess-inflation]. Costs are index units, not dollars.</p></div>`;
+};
+
+S["Early Warning"] = () => `
+  <div class="card"><h2>Indicators (Phase 11)</h2>
+    ${table(["Indicator","Metric","Threshold","Lead time","Confidence"],
+      R.phase11_early_warning.map(e=>[esc(e.indicator),esc(e.metric),esc(e.threshold),e.lead_time,e.confidence]))}</div>
+  <div class="card"><h2>Critical unknowns</h2>
+    ${R.phase11_critical_unknowns.map((u,i)=>`<p style="margin:4px 0">${i+1}. ${esc(u)}</p>`).join("")}</div>`;
+
+S["Red Team"] = () => {
+  const rt = R.phase12_red_team;
+  return `<div class="card"><h2>Adversarial findings (Phase 12) — which forecasts survive attack?</h2>
+    ${table(["Forecast","Center","Adversarial band","Width","Verdict"],
+      rt.findings.map(f=>[f.forecast.replaceAll("_"," "),fmt(f.center),
+        `[${fmt(f.adversarial_band[0])} – ${fmt(f.adversarial_band[1])}]`, f.band_width,
+        `<span class="${f.verdict.startsWith("FRAGILE")?"verdict-f":(f.verdict.startsWith("SENSITIVE")?"verdict-s":"verdict-r")}">${f.verdict.split(" — ")[0]}</span> <span class="muted">${esc(f.verdict.split(" — ")[1]||"")}</span>`]))}</div>
+  <div class="card"><h2>Qualitative challenges</h2>
+    ${rt.qualitative_challenges.map(q=>`<p style="margin:5px 0">• ${esc(q)}</p>`).join("")}</div>`;
+};
+
+S["Evidence"] = () => `
+  <div class="card"><h2>Explainable forecasts (Phase 9) — every number carries its reasoning</h2>
+    ${R.phase9_explanations.map(e=>`<details><summary>${e.forecast.replaceAll("_"," ")} — ${fmt(e.probability)} <span class="muted">(${e.confidence})</span></summary>
+      <p><b>Evidence:</b> ${e.evidence.map(x=>`<span class="pill">${esc(x)}</span>`).join("")}<br>
+      <b>Causal pathway:</b> ${esc(e.causal_pathway)}<br>
+      <b>Historical analog:</b> ${esc(e.historical_analog)}<br>
+      <b class="tag-fc">Counterargument:</b> ${esc(e.counterargument)}<br>
+      <b>Failure conditions:</b> ${e.failure_conditions.map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</p></details>`).join("")}
+    <p class="muted">Evidence IDs reference Phase-1 facts (Overview tab).</p></div>`;
+
+TABS.forEach((t,i)=>{
+  const btn=document.createElement("button"); btn.textContent=t;
+  if(i===0) btn.classList.add("active");
+  btn.onclick=()=>{ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active"); render(t); };
+  nav.appendChild(btn);
+});
+function render(t){ main.innerHTML = `<section class="active">${S[t]()}</section>`; window.scrollTo(0,0); }
+render("Overview");
+</script>
+</body>
+</html>

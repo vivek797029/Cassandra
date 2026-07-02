@@ -1,0 +1,164 @@
+{
+  "as_of": "2026-06-11",
+  "facts": [
+    {"id": "F1", "domain": "security", "text": "28 Feb 2026: US-Israel 'Operation Epic Fury' strikes on Iran killed Supreme Leader Khamenei; Iran retaliated on Israel and US Gulf bases (UAE, Qatar, Bahrain).", "source": "Britannica/Wikipedia 2026 Iran war"},
+    {"id": "F2", "domain": "security", "text": "Strait of Hormuz declared closed 4 Mar - 17 Apr 2026 (mines, ship attacks); ~20% of global oil disrupted; US blockaded Iranian ports 13 Apr - 29 May.", "source": "Wikipedia 2026 Strait of Hormuz crisis; CRS R45281"},
+    {"id": "F3", "domain": "economy", "text": "Brent surged past $120 (+51% in March, among largest monthly jumps on record); ~$94 on 10 Jun 2026, +35% y/y.", "source": "CNBC; TradingEconomics; Fortune"},
+    {"id": "F4", "domain": "security", "text": "Ceasefire faltering: 7-8 Jun worst Israel-Iran exchanges in months (strikes near Tehran, Isfahan, Tabriz; missiles toward Ramat David); Iranian/proxy attacks on UAE, Kuwait, Saudi, Bahrain, Jordan shipping/territory.", "source": "CNN live 7-8 Jun 2026; ACLED Jun 2026"},
+    {"id": "F5", "domain": "economy", "text": "IMF WEO Apr-2026 'Global Economy in the Shadow of War': 2026 growth 3.1% (cut from 3.3%), inflation 4.4% rising; adverse scenario 2.5%/5.4%, severe 2.0%/>6%.", "source": "IMF WEO Apr-2026"},
+    {"id": "F6", "domain": "economy", "text": "World Bank: energy prices +24% in 2026, biggest surge since 2022; developing-economy growth 3.6% (-0.4pp), inflation 5.1% (+1pp); food = 43% of LIC consumption.", "source": "World Bank Commodity Outlook Apr-2026; IMF blogs"},
+    {"id": "F7", "domain": "security", "text": "Ukraine war in 5th year; Russia holds just under 1/5 of territory; May Victory-Day 3-day ceasefire + 1,000-POW swap; Zelenskyy direct-talks offer declined by Putin (early Jun); Putin says war 'coming to an end' (10 May).", "source": "Al Jazeera May-Jun 2026; Cambridge peace monitor"},
+    {"id": "F8", "domain": "governance", "text": "US: Trump approval 38.1% (May) from 47% at inauguration; independents 34%; Q1 GDP +2.0%, PCE inflation 4.5%; Democrats lead economic trust first time since 2010.", "source": "USPollingData; Brookings; NPR"},
+    {"id": "F9", "domain": "economy", "text": "China: lowest growth target in decades (4.5-5%); 3rd straight year of deflation; property investment -17.2% (2025); ~80M unsold/vacant homes; record $1.19tn trade surplus 2025.", "source": "CNN NPC Mar-2026; Fortune; Goldman Sachs"},
+    {"id": "F10", "domain": "security", "text": "PRC 'Justice Mission 2025' blockade-simulation exercise (29-30 Dec); naval deployments vs Balikatan 2026; Taiwan $24.8bn 8-year special defense budget (May 2026), defense to ~3.3% GDP.", "source": "State Dept Jan-2026; AEI May-2026"},
+    {"id": "F11", "domain": "technology", "text": "AI agents jumped 12% -> ~66% on OSWorld; frontier models exceed human baselines on PhD-science/competition-math; first large-scale AI-orchestrated espionage campaign (80-90% autonomous, PRC-attributed); AI attacks +72% y/y; 85% of orgs report deepfake threats.", "source": "Stanford AI Index 2026; PwC/Trend Micro 2026; Anthropic research"},
+    {"id": "F12", "domain": "environment", "text": "2026 tracking 2nd-warmest year (~1.47C best estimate); WMO 82% El Nino May-Jul 2026, possibly strong; record-low Arctic winter ice; 150M+ acres burned YTD.", "source": "Carbon Brief; WMO; Eos"},
+    {"id": "F13", "domain": "governance", "text": "Europe: all 32 NATO members hit 2% GDP defense (2025); Hague target 3.5% core; military spend +14% y/y; debt: Greece 150.9%, Italy 135.3%, France 113.1% of GDP; AfD surging.", "source": "CFR; Intereconomics; CER"},
+    {"id": "F14", "domain": "economy", "text": "India FY2025-26 growth 7.7% (fastest major economy); each +$10/bbl oil widens CAD ~0.4-0.5% GDP; CAD risk at 14-year high.", "source": "Gulf News; Deloitte; ADB"}
+  ],
+  "signals": [
+    {"name": "Iran ceasefire degradation", "strength": 78, "reliability": 90, "growth": "rising", "horizon": "0-6mo", "impact": "war resumption; oil >$120; Hormuz re-closure", "fact_ids": ["F4"]},
+    {"name": "Iranian succession contest", "strength": 70, "reliability": 60, "growth": "unclear", "horizon": "0-18mo", "impact": "war/peace branch point", "fact_ids": ["F1", "F4"]},
+    {"name": "Ukraine endgame diplomacy", "strength": 55, "reliability": 75, "growth": "rising slowly", "horizon": "3-18mo", "impact": "armistice; sanctions sequencing", "fact_ids": ["F7"]},
+    {"name": "US stagflation-lite + 38% approval", "strength": 72, "reliability": 92, "growth": "stable-worsening", "horizon": "0-5mo", "impact": "midterm wave; policy paralysis", "fact_ids": ["F8"]},
+    {"name": "China deflation + record surplus", "strength": 80, "reliability": 88, "growth": "stable", "horizon": "1-3yr", "impact": "goods disinflation; trade conflict", "fact_ids": ["F9"]},
+    {"name": "Taiwan blockade rehearsals", "strength": 62, "reliability": 85, "growth": "rising", "horizon": "2-7yr", "impact": "2030-32 deterrence window", "fact_ids": ["F10"]},
+    {"name": "AI agent capability jump", "strength": 75, "reliability": 80, "growth": "rising fast", "horizon": "1-5yr", "impact": "productivity vs displacement", "fact_ids": ["F11"]},
+    {"name": "AI-autonomous cyber operations", "strength": 68, "reliability": 70, "growth": "rising fast", "horizon": "0-2yr", "impact": "infrastructure cascade risk", "fact_ids": ["F11"]},
+    {"name": "El Nino formation (82%)", "strength": 74, "reliability": 85, "growth": "rising", "horizon": "6-18mo", "impact": "food-price spike; LIC stress", "fact_ids": ["F12"]},
+    {"name": "European rearmament vs debt", "strength": 66, "reliability": 90, "growth": "rising", "horizon": "1-5yr", "impact": "fiscal squeeze; far-right gains", "fact_ids": ["F13"]},
+    {"name": "EM debt + import squeeze", "strength": 64, "reliability": 82, "growth": "rising", "horizon": "0-2yr", "impact": "defaults; unrest", "fact_ids": ["F6"]},
+    {"name": "Deepfake-saturated US midterms", "strength": 58, "reliability": 65, "growth": "rising", "horizon": "0-5mo", "impact": "contested legitimacy", "fact_ids": ["F11", "F8"]}
+  ],
+  "causal_nodes": ["ME war/energy", "Deterrence erosion", "Inflation persistence", "AI disruption", "China slowdown", "Climate/food", "EM debt", "Info degradation"],
+  "causal_edges": [
+    ["ME war/energy", "Inflation persistence", 0.8],
+    ["Inflation persistence", "Info degradation", 0.3],
+    ["ME war/energy", "EM debt", 0.6],
+    ["Climate/food", "EM debt", 0.5],
+    ["China slowdown", "Deterrence erosion", 0.3],
+    ["ME war/energy", "Deterrence erosion", 0.4],
+    ["AI disruption", "Info degradation", 0.6],
+    ["Inflation persistence", "Deterrence erosion", 0.2]
+  ],
+  "expert_prior_weights": {
+    "Middle East war / energy shock": 26, "Great-power deterrence erosion": 18,
+    "Inflation persistence": 14, "AI labor & security disruption": 12,
+    "China structural slowdown": 10, "Climate / El Nino food shock": 8,
+    "EM debt distress": 6, "Information-ecosystem degradation": 6
+  },
+  "analogs": [
+    {"name": "1973-74 oil embargo vs 2026 Hormuz shock", "similarity": 74,
+     "similar": "war-triggered Gulf supply cut into existing inflation",
+     "different": "more diversified 2026 supply; inflation-targeting central banks",
+     "outcome": "stagflation decade; substitution wave broke OPEC pricing by 1986",
+     "lesson": "the lasting effect is the 5-10y substitution wave, not the recession",
+     "policy_success": "IEA, strategic reserves", "policy_failure": "price controls"},
+    {"name": "Death of Stalin 1953 vs Iran succession 2026", "similarity": 58,
+     "similar": "sudden death of system arbiter; security services as kingmakers",
+     "different": "killed by foreign action - humiliation fused into succession",
+     "outcome": "collective leadership then partial thaw",
+     "lesson": "external de-escalation usually follows internal consolidation (12-24mo); danger is the contest itself",
+     "policy_success": "patient engagement", "policy_failure": "maximalist pressure during contest"},
+    {"name": "Korea 1953 armistice vs Ukraine 2026-27", "similarity": 66,
+     "similar": "attritional stalemate; exhausted patrons; talks during fighting",
+     "different": "nuclear principal; EU accession as anchor; no China-scale intervener",
+     "outcome": "armistice without treaty, durable 70+ years",
+     "lesson": "freeze comes when both sides expect renewed war to cost more than status quo - approaching, not arrived",
+     "policy_success": "armistice machinery", "policy_failure": "waiting for full peace treaty"},
+    {"name": "1930s tariff blocs vs 2025-26 fragmentation", "similarity": 52,
+     "similar": "tariff escalation by largest economy; surplus-country deflation",
+     "different": "floating FX; services trade; no demand collapse yet",
+     "outcome": "trade contraction deepened depression, fed extremism",
+     "lesson": "lethal step was the financial-crisis interaction (1931), not tariffs alone",
+     "policy_success": "1934 RTAA reversal", "policy_failure": "competitive devaluation spiral"},
+    {"name": "Railway mania/dot-com vs AI boom 2024-26", "similarity": 60,
+     "similar": "real GPT; capex outrunning revenue; narrative valuations",
+     "different": "funded by incumbent cash flows, not retail leverage",
+     "outcome": "crashes that left transformative infrastructure",
+     "lesson": "a 2027-28 AI correction would slow, not stop, diffusion; dividend arrives 5-15y after hype",
+     "policy_success": "letting infrastructure survive the crash", "policy_failure": "bailing out valuations"}
+  ],
+  "early_warning": [
+    {"indicator": "Hormuz war-risk insurance premium", "metric": "% of hull value, VLCC", "threshold": ">1.5%", "lead_time": "1-3 weeks", "confidence": "high"},
+    {"indicator": "Iran succession trajectory", "metric": "IRGC appointments; Assembly of Experts schedule", "threshold": "purge or hardliner sweep", "lead_time": "1-6 months", "confidence": "medium"},
+    {"indicator": "Israel-Iran kinetic tempo", "metric": "strikes/week (ACLED)", "threshold": ">3 weeks rising", "lead_time": "2-6 weeks", "confidence": "high"},
+    {"indicator": "Russian force regeneration", "metric": "regeneration vs front deployment ratio", "threshold": ">60%", "lead_time": "3-9 months", "confidence": "medium"},
+    {"indicator": "PRC coast-guard 'inspections'", "metric": "events/quarter", "threshold": ">5/q or first boarding", "lead_time": "3-12 months", "confidence": "medium-high"},
+    {"indicator": "US certification litigation", "metric": "pre-election multi-state suits", "threshold": "multi-state wave", "lead_time": "1-4 months", "confidence": "medium"},
+    {"indicator": "EM distress", "metric": "EMBI spread + food import cover", "threshold": ">600bp & <3mo cover", "lead_time": "2-6 months", "confidence": "high"},
+    {"indicator": "El Nino severity", "metric": "Nino-3.4 anomaly", "threshold": ">+1.5C sustained", "lead_time": "3-6 months", "confidence": "high"},
+    {"indicator": "AI infrastructure incident", "metric": "first AI-autonomous G7 takedown", "threshold": "single event", "lead_time": "step change", "confidence": "medium"},
+    {"indicator": "Inflation expectations", "metric": "5y5y forwards G3", "threshold": ">3.5% sustained", "lead_time": "6-18 months", "confidence": "high"}
+  ],
+  "explanations": {
+    "ME_war_1y": {
+      "evidence": ["F1", "F4"],
+      "mechanism": "Succession contest -> factional resolve signaling -> tit-for-tat exchanges -> one crosses casualty threshold -> retaliation spiral. Model quarterly escalation hazard {esc} (decaying as consolidation proceeds).",
+      "analog": "Death of Stalin 1953: external calm followed internal victory; danger concentrated in the contest window.",
+      "counter": "The 7-8 Jun exchange may BE the enforcement mechanism of the ceasefire (shadow-war equilibrium), not its failure.",
+      "confidence": "low-moderate",
+      "failure": ["new Supreme Leader consolidates by Q4", "US-Iran back-channel verified deal"]
+    },
+    "Hormuz_closure_by_end2027": {
+      "evidence": ["F2", "F3", "F4"],
+      "mechanism": "War resumption -> Iran's only strategic lever is the strait -> mining/boarding -> closure. Direct hazard {hz}/q from ceasefire, higher from war regime.",
+      "analog": "Tanker War 1984-88: months-long disruption, US convoying; closure attempts are costly and end.",
+      "counter": "Iran demonstrated closure once and re-opened under blockade pressure - deterrent may now be spent.",
+      "confidence": "moderate",
+      "failure": ["Gulf maritime coalition with teeth", "Iranian fleet attrition"]
+    },
+    "UA_formal_ceasefire_by_end2027": {
+      "evidence": ["F7"],
+      "mechanism": "Mutual exhaustion + patron fatigue -> armistice along line of contact; hazard rises with time (fatigue ramp + Russia stance agent).",
+      "analog": "Korea 1953: armistice when both sides expected renewed war to cost more than freeze.",
+      "counter": "Putin rhetoric may be sanctions-relief shaping before a 2027 offensive; regeneration data will tell.",
+      "confidence": "low-moderate",
+      "failure": ["Russian breakthrough in Donbas", "US aid collapse changing Kyiv's calculus"]
+    },
+    "TW_blockade_by_2030": {
+      "evidence": ["F10", "F9"],
+      "mechanism": "Capability window 2030-32 + US two-theater strain -> quarantine as sub-war coercion test; hazard x1.4 while US engaged in ME (opportunism agent).",
+      "analog": "Berlin blockade 1948: sub-war coercion testing alliance resolve - relieved without great-power war.",
+      "counter": "PRC economic fragility argues for delay; blockade is one-shot leverage with massive self-harm.",
+      "confidence": "low",
+      "failure": ["deterrence-by-denial visibly credible", "PRC domestic consolidation needs calm"]
+    },
+    "Global_recession_lt2p5_by_2028": {
+      "evidence": ["F5", "F6", "F3"],
+      "mechanism": "Only first-order global channel: energy price x duration -> real income squeeze + policy tightening -> sub-2.5% annual growth (IMF adverse zone).",
+      "analog": "1973 and 1979: both global recessions came via oil duration, not the wars themselves.",
+      "counter": "Buffers (reserves, substitution, China stimulus capacity) have so far capped every spike within 2 quarters.",
+      "confidence": "moderate",
+      "failure": ["Hormuz re-closure >8 weeks (raises sharply)", "fast ME settlement (lowers sharply)"]
+    },
+    "Dem_House_Nov2026": {
+      "evidence": ["F8"],
+      "mechanism": "Misery index (inflation + growth gap) -> incumbent punishment; logistic link calibrated to 38% approval, 4.5% PCE baseline.",
+      "analog": "1974, 2006, 2018 wave midterms under sub-40% approval.",
+      "counter": "War rally-round effect if conflict reignites pre-November could compress the wave.",
+      "confidence": "moderate-high",
+      "failure": ["rapid disinflation + ceasefire dividend by October"]
+    }
+  },
+  "red_team_qualitative": [
+    "ME hazards anchored on one week of headlines; base rate n~6 for post-decapitation resumption - honest band 35-60%, not a point.",
+    "Durable-settlement probability may underweight humiliation-revenge dynamics (Versailles pattern).",
+    "Taiwan probabilities imply more knowability than single-actor opacity permits; read as order-of-magnitude.",
+    "Bull case underweighted: settlement + armistice by mid-2027 yields falling energy, 3%+ growth, AI capex boom.",
+    "Vendor-sourced cyber statistics (72% growth, 36k probes/sec) are detection-biased; directional only.",
+    "20,000 paths of hand-set parameters is coherence, not measurement - which is exactly why theta is now TRAINED on resolved events (see novelty/)."
+  ],
+  "critical_unknowns": [
+    "Who rules Iran by Dec 2026 - and whether they need external victory or calm",
+    "Putin 'end of war' rhetoric: decision or deception",
+    "True PRC internal Taiwan-readiness timeline vs announced exercises",
+    "AI productivity diffusion: 5-year or 15-year GPT curve",
+    "El Nino lands moderate or super",
+    "US two-theater readiness in fact vs doctrine",
+    "Detection-bias share of AI-cyber growth statistics",
+    "Chinese household savings behavior under deflation",
+    "Whether deepfakes change votes or merely degrade trust",
+    "Where this cycle's hidden leverage (LTCM analog) sits"
+  ]
+}

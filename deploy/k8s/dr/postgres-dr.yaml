@@ -1,0 +1,106 @@
+# Task 90 — DR active-active: PostgreSQL streaming replication (primary + hot standby).
+# Apply the primary in cluster A, the standby in cluster B (cross-cluster Service via
+# mesh/LB). Standby streams WAL from the primary; on primary loss, promote the standby
+# (touch promote trigger) and repoint the API. Target: RPO < 15 min (streaming keeps it
+# near-zero in steady state), RTO < 15 min via the drill in README.md.
+apiVersion: v1
+kind: Namespace
+metadata: { name: argus }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: pg-primary-conf, namespace: argus }
+data:
+  postgresql.conf: |
+    listen_addresses = '*'
+    wal_level = replica
+    max_wal_senders = 10
+    wal_keep_size = 512MB
+    hot_standby = on
+    archive_mode = on
+    archive_command = 'test ! -f /wal-archive/%f && cp %p /wal-archive/%f'
+    synchronous_commit = remote_write
+  pg_hba.conf: |
+    host replication replicator 0.0.0.0/0 scram-sha-256
+    host all all 0.0.0.0/0 scram-sha-256
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: pg-primary, namespace: argus, labels: { app: pg-primary, role: primary } }
+spec:
+  serviceName: pg-primary
+  replicas: 1
+  selector: { matchLabels: { app: pg-primary } }
+  template:
+    metadata: { labels: { app: pg-primary, role: primary } }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          args: ["-c", "config_file=/etc/pg/postgresql.conf", "-c", "hba_file=/etc/pg/pg_hba.conf"]
+          env:
+            - { name: POSTGRES_DB, value: argus }
+            - { name: POSTGRES_USER, value: argus }
+            - { name: POSTGRES_PASSWORD, valueFrom: { secretKeyRef: { name: argus-secrets, key: PG_PASSWORD } } }
+            - { name: POSTGRES_REPLICATION_USER, value: replicator }
+          ports: [{ containerPort: 5432 }]
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+            - { name: conf, mountPath: /etc/pg }
+            - { name: wal-archive, mountPath: /wal-archive }
+      volumes:
+        - { name: conf, configMap: { name: pg-primary-conf } }
+        - { name: wal-archive, emptyDir: {} }
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 50Gi } } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: pg-primary, namespace: argus }
+spec: { selector: { app: pg-primary }, ports: [{ port: 5432, targetPort: 5432 }] }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: pg-standby, namespace: argus, labels: { app: pg-standby, role: standby } }
+spec:
+  serviceName: pg-standby
+  replicas: 1
+  selector: { matchLabels: { app: pg-standby } }
+  template:
+    metadata: { labels: { app: pg-standby, role: standby } }
+    spec:
+      initContainers:
+        # base-backup from the primary and configure streaming (writes standby.signal
+        # + primary_conninfo). On promotion, the trigger removes standby.signal.
+        - name: clone-from-primary
+          image: postgres:16-alpine
+          command: ["sh", "-c"]
+          args:
+            - |
+              if [ ! -s /var/lib/postgresql/data/PG_VERSION ]; then
+                PGPASSWORD="$REPL_PASSWORD" pg_basebackup -h pg-primary.argus.svc -U replicator \
+                  -D /var/lib/postgresql/data -Fp -Xs -P -R
+                echo "primary_conninfo = 'host=pg-primary.argus.svc user=replicator application_name=standby'" \
+                  >> /var/lib/postgresql/data/postgresql.auto.conf
+                touch /var/lib/postgresql/data/standby.signal
+              fi
+          env:
+            - { name: REPL_PASSWORD, valueFrom: { secretKeyRef: { name: argus-secrets, key: PG_REPL_PASSWORD } } }
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          env:
+            - { name: POSTGRES_PASSWORD, valueFrom: { secretKeyRef: { name: argus-secrets, key: PG_PASSWORD } } }
+          ports: [{ containerPort: 5432 }]
+          readinessProbe: { exec: { command: ["pg_isready", "-U", "argus"] }, periodSeconds: 10 }
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 50Gi } } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: pg-standby, namespace: argus }   # read-only replica endpoint
+spec: { selector: { app: pg-standby }, ports: [{ port: 5432, targetPort: 5432 }] }

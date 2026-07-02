@@ -1,0 +1,9 @@
+{
+  "policy": "No non-emergency production change during a freeze window without CAB approval.",
+  "windows": [
+    {"name": "go-live-hypercare", "start": "2026-07-01", "end": "2026-07-15",
+     "reason": "Post go-live hypercare (Task 100) — stabilization only"},
+    {"name": "year-end-freeze", "start": "2026-12-18", "end": "2027-01-02",
+     "reason": "Holiday change freeze — skeleton on-call only"}
+  ]
+}

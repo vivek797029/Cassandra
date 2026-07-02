@@ -1,0 +1,34 @@
+# ARGUS — Kafka topic registry (Phase-2+; ingestion mesh, blueprint §2)
+# Apply via scripts/create_topics.sh or strimzi KafkaTopic CRs.
+defaults:
+  replication_factor: 3
+  retention_ms: 1209600000        # 14 days
+topics:
+  - name: ingest.raw.gdelt        # raw GDELT 15-min batches
+    partitions: 12
+    schema: schemas/raw_event.avsc
+  - name: ingest.raw.acled        # weekly ACLED curated drops
+    partitions: 3
+    schema: schemas/raw_event.avsc
+  - name: ingest.raw.markets      # commodities/FX/spread ticks (1-min bars)
+    partitions: 6
+  - name: ingest.normalized       # post schema/geocode/dedup
+    partitions: 12
+    schema: schemas/normalized_event.avsc
+  - name: ingest.claims           # extracted claim frames w/ source spans
+    partitions: 6
+  - name: kg.upserts              # TCKG write-ahead stream
+    partitions: 6
+  - name: engine.retrain.requests # calibration retrain triggers (drift, schedule)
+    partitions: 1
+  - name: engine.runs             # completed run manifests (counterfactual/policy/pipeline)
+    partitions: 3
+  - name: forecasts.issued        # forecast ledger stream -> dashboards, EWI service
+    partitions: 3
+  - name: ewi.alerts              # threshold crossings (watch-officer wall)
+    partitions: 3
+    retention_ms: 7776000000      # 90 days
+  - name: audit.events            # append-only audit fan-in (also written to PG)
+    partitions: 3
+    retention_ms: -1              # compacted, infinite
+    cleanup_policy: compact

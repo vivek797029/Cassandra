@@ -1,0 +1,79 @@
+{
+  "__inputs": [
+    {"name": "DS_PROMETHEUS", "label": "Prometheus", "type": "datasource", "pluginId": "prometheus"}
+  ],
+  "title": "ARGUS Copilot — RED + Engine",
+  "uid": "argus-copilot-red",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "time": {"from": "now-6h", "to": "now"},
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {"name": "DS_PROMETHEUS", "type": "datasource", "query": "prometheus", "current": {}}
+    ]
+  },
+  "panels": [
+    {
+      "id": 1, "title": "Request rate (req/s by route)", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [
+        {"expr": "sum(rate(argus_requests_total[5m])) by (path)", "legendFormat": "{{path}}"}
+      ]
+    },
+    {
+      "id": 2, "title": "Error rate (5xx/s)", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "red"}}},
+      "targets": [
+        {"expr": "sum(rate(argus_request_errors_total[5m]))", "legendFormat": "5xx/s"}
+      ]
+    },
+    {
+      "id": 3, "title": "Latency p50 / p95 / p99 (s)", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [
+        {"expr": "histogram_quantile(0.50, sum(rate(argus_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50"},
+        {"expr": "histogram_quantile(0.95, sum(rate(argus_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95"},
+        {"expr": "histogram_quantile(0.99, sum(rate(argus_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99"}
+      ]
+    },
+    {
+      "id": 4, "title": "Engine availability", "type": "stat",
+      "gridPos": {"h": 8, "w": 6, "x": 12, "y": 8},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [
+        {"expr": "argus_engine_up", "legendFormat": "engine up"},
+        {"expr": "argus_degraded", "legendFormat": "degraded"}
+      ]
+    },
+    {
+      "id": 5, "title": "Cached ensemble paths", "type": "stat",
+      "gridPos": {"h": 8, "w": 6, "x": 18, "y": 8},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [{"expr": "argus_engine_paths_cached", "legendFormat": "paths"}]
+    },
+    {
+      "id": 6, "title": "Security — NLU injections & entailment violations", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [
+        {"expr": "argus_nlu_injection_detections", "legendFormat": "injection detections"},
+        {"expr": "argus_entailment_violations", "legendFormat": "entailment violations"}
+      ]
+    },
+    {
+      "id": 7, "title": "NLU parses & LLM-assist calls", "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "targets": [
+        {"expr": "argus_nlu_parses", "legendFormat": "parses"},
+        {"expr": "argus_nlu_llm_calls", "legendFormat": "llm calls"}
+      ]
+    }
+  ]
+}

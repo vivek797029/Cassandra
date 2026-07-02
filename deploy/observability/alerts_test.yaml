@@ -1,0 +1,120 @@
+# Task 81 — promtool unit tests: synthetic breaches that must page.
+# Run: promtool test rules alerts_test.yaml   (executed in CI; see ci.yml `alerts` job)
+rule_files:
+  - alerts.yaml
+evaluation_interval: 1m
+
+tests:
+  # 1) 20% error ratio → HighErrorRate + fast burn page
+  - interval: 1m
+    input_series:
+      - series: 'argus_requests_total{method="POST",path="/v1/ask",status="200"}'
+        values: '0+80x15'
+      - series: 'argus_requests_total{method="POST",path="/v1/ask",status="500"}'
+        values: '0+20x15'
+      - series: 'argus_request_errors_total{method="POST",path="/v1/ask"}'
+        values: '0+20x15'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ArgusHighErrorRate
+        exp_alerts:
+          - exp_labels: { alertname: ArgusHighErrorRate, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS 5xx error ratio above 5%"
+              description: "The API 5xx error ratio has exceeded 5% of traffic for 5 minutes."
+              runbook: "docs/RUNBOOK.md#6-incident-procedures"
+      - eval_time: 10m
+        alertname: ArgusErrorBudgetFastBurn
+        exp_alerts:
+          - exp_labels: { alertname: ArgusErrorBudgetFastBurn, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS fast error-budget burn"
+              description: "5xx ratio above 14% for 2 minutes — burning the monthly error budget fast."
+
+  # 2) p99 latency in (2,5]s → HighLatencyP99 page
+  - interval: 1m
+    input_series:
+      - series: 'argus_request_duration_seconds_bucket{le="0.5"}'
+        values: '0+0x15'
+      - series: 'argus_request_duration_seconds_bucket{le="1"}'
+        values: '0+0x15'
+      - series: 'argus_request_duration_seconds_bucket{le="2"}'
+        values: '0+5x15'
+      - series: 'argus_request_duration_seconds_bucket{le="5"}'
+        values: '0+50x15'
+      - series: 'argus_request_duration_seconds_bucket{le="+Inf"}'
+        values: '0+50x15'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ArgusHighLatencyP99
+        exp_alerts:
+          - exp_labels: { alertname: ArgusHighLatencyP99, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS p99 latency above 1s"
+              description: "Request p99 latency has exceeded the 1s SLO for 10 minutes."
+
+  # 3) engine down → page
+  - interval: 1m
+    input_series:
+      - series: 'argus_engine_up'
+        values: '0+0x5'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: ArgusEngineDown
+        exp_alerts:
+          - exp_labels: { alertname: ArgusEngineDown, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS forecasting engine down"
+              description: "argus_engine_up has been 0 for 1 minute (engine failed to warm)."
+
+  # 4) degraded (serving cache) → page
+  - interval: 1m
+    input_series:
+      - series: 'argus_degraded'
+        values: '1+0x5'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: ArgusDegraded
+        exp_alerts:
+          - exp_labels: { alertname: ArgusDegraded, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS serving cached snapshot (degraded)"
+              description: "argus_degraded has been 1 for 2 minutes — live simulation paused."
+
+  # 5) scrape target missing → page
+  - interval: 1m
+    input_series:
+      - series: 'up{job="argus-copilot"}'
+        values: '0+0x5'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: ArgusTargetMissing
+        exp_alerts:
+          - exp_labels: { alertname: ArgusTargetMissing, severity: page, service: argus-copilot }
+            exp_annotations:
+              summary: "ARGUS scrape target missing"
+              description: "Prometheus cannot scrape the ARGUS API for 2 minutes."
+
+  # 6) healthy traffic → NO alerts (no false pages)
+  - interval: 1m
+    input_series:
+      - series: 'argus_requests_total{method="GET",path="/v1/forecasts",status="200"}'
+        values: '0+100x15'
+      - series: 'argus_request_errors_total{method="GET",path="/v1/forecasts"}'
+        values: '0+0x15'
+      - series: 'argus_engine_up'
+        values: '1+0x15'
+      - series: 'argus_degraded'
+        values: '0+0x15'
+      - series: 'up{job="argus-copilot"}'
+        values: '1+0x15'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: ArgusHighErrorRate
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: ArgusEngineDown
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: ArgusDegraded
+        exp_alerts: []

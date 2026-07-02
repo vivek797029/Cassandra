@@ -1,0 +1,19 @@
+# ARGUS Copilot API — single-container service (engines + API + static UI)
+FROM python:3.11-slim AS base
+WORKDIR /app
+RUN useradd -r -u 10001 argus
+COPY requirements.txt requirements-api.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-api.txt
+COPY VERSION ./
+COPY core/ core/
+COPY novelty/ novelty/
+COPY data/ data/
+COPY services/ services/
+COPY frontend/static/ frontend/static/
+ENV ARGUS_FAST=1 ARGUS_DB=/data/copilot.db PYTHONUNBUFFERED=1
+RUN mkdir -p /data output && chown -R argus /data /app/output
+USER argus
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+  CMD python -c "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/healthz')"
+CMD ["python", "-m", "uvicorn", "services.copilot.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

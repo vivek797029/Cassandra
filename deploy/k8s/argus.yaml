@@ -1,0 +1,123 @@
+# ARGUS — Kubernetes manifests (Phase-3 pilot).  kubectl apply -f deploy/k8s/argus.yaml
+apiVersion: v1
+kind: Namespace
+metadata: { name: argus }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: copilot-api, namespace: argus, labels: { app: copilot-api } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: copilot-api } }
+  template:
+    metadata:
+      labels: { app: copilot-api }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 10001 }
+      containers:
+        - name: api
+          image: registry.internal/argus/copilot-api:1.0.0   # CI-stamped
+          ports: [{ containerPort: 8000 }]
+          env:
+            - { name: ARGUS_FAST, value: "0" }               # full-fidelity bands in cluster
+            - { name: ARGUS_DB, value: /data/copilot.db }    # Phase-3: DATABASE_URL from secret
+          resources:
+            requests: { cpu: "500m", memory: 1Gi }
+            limits:   { cpu: "2",    memory: 4Gi }
+          readinessProbe: { httpGet: { path: /readyz, port: 8000 }, initialDelaySeconds: 30, periodSeconds: 10 }
+          livenessProbe:  { httpGet: { path: /healthz, port: 8000 }, initialDelaySeconds: 60, periodSeconds: 15 }
+          volumeMounts: [{ name: data, mountPath: /data }]
+      volumes:
+        - name: data
+          persistentVolumeClaim: { claimName: copilot-data }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: copilot-data, namespace: argus }
+spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 10Gi } } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: copilot-api, namespace: argus }
+spec:
+  selector: { app: copilot-api }
+  ports: [{ port: 80, targetPort: 8000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: copilot
+  namespace: argus
+  annotations: { nginx.ingress.kubernetes.io/proxy-read-timeout: "120" }
+spec:
+  rules:
+    - host: argus.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: copilot-api, port: { number: 80 } } }
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: copilot-api, namespace: argus }
+spec:
+  scaleTargetRef: { apiVersion: apps/v1, kind: Deployment, name: copilot-api }
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 70 } }
+---
+# Nightly pipeline CronJob: retrain theta + refresh full-fidelity bands + publish report
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: nightly-pipeline, namespace: argus }
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: pipeline
+              image: registry.internal/argus/copilot-api:1.0.0
+              command: ["python", "pipeline.py"]
+              resources: { requests: { cpu: "2", memory: 4Gi }, limits: { cpu: "4", memory: 8Gi } }
+---
+# Nightly retrain: champion/challenger ratchet over registry-resolved events (Task 54)
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: nightly-retrain, namespace: argus }
+spec:
+  schedule: "30 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: retrain
+              image: registry.internal/argus/copilot-api:1.0.0
+              command: ["python", "-m", "workers.retrain.daily", "--force"]
+              resources: { requests: { cpu: "2", memory: 4Gi }, limits: { cpu: "4", memory: 8Gi } }
+---
+# Full-fidelity band refresh: ARGUS_FAST=0 adversary+conformal bands → PG (Task 83)
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: nightly-bands, namespace: argus }
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: bands
+              image: registry.internal/argus/copilot-api:1.0.0
+              command: ["python", "-m", "workers.bands.refresh"]
+              env:
+                - { name: ARGUS_FAST, value: "0" }
+              resources: { requests: { cpu: "2", memory: 4Gi }, limits: { cpu: "4", memory: 8Gi } }

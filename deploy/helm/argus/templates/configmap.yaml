@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "argus.fullname" . }}-env
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "argus.labels" . | nindent 4 }}
+data:
+  {{- range $k, $v := .Values.env }}
+  {{ $k }}: {{ $v | quote }}
+  {{- end }}
+  {{- if .Values.llm.enabled }}
+  ARGUS_LLM_URL: {{ .Values.llm.url | quote }}
+  ARGUS_LLM_MODEL: {{ .Values.llm.model | quote }}
+  {{- end }}

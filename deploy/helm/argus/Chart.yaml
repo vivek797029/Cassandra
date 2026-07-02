@@ -1,0 +1,9 @@
+apiVersion: v2
+name: argus-copilot
+description: ARGUS Strategic Intelligence Copilot — API, autoscaling, nightly pipelines (Task 78)
+type: application
+version: 0.1.0          # chart version
+appVersion: "2.0.0"     # application version (keep in sync with /VERSION)
+maintainers:
+  - name: ARGUS platform
+kubeVersion: ">=1.25.0-0"

@@ -1,0 +1,82 @@
+# Task 81 — ARGUS Prometheus alerting rules (SLO-burn + availability + security).
+# Validate: promtool check rules alerts.yaml
+# Test:     promtool test rules alerts_test.yaml
+# Annotations are static (no $value templating) so the synthetic-breach unit tests
+# assert exact output.
+groups:
+  - name: argus-slo
+    rules:
+      - alert: ArgusHighErrorRate
+        expr: |
+          sum(rate(argus_request_errors_total[5m]))
+            / clamp_min(sum(rate(argus_requests_total[5m])), 1) > 0.05
+        for: 5m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS 5xx error ratio above 5%"
+          description: "The API 5xx error ratio has exceeded 5% of traffic for 5 minutes."
+          runbook: "docs/RUNBOOK.md#6-incident-procedures"
+
+      - alert: ArgusErrorBudgetFastBurn
+        expr: |
+          sum(rate(argus_request_errors_total[5m]))
+            / clamp_min(sum(rate(argus_requests_total[5m])), 1) > 0.14
+        for: 2m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS fast error-budget burn"
+          description: "5xx ratio above 14% for 2 minutes — burning the monthly error budget fast."
+
+      - alert: ArgusHighLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(argus_request_duration_seconds_bucket[5m])) by (le)) > 1
+        for: 10m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS p99 latency above 1s"
+          description: "Request p99 latency has exceeded the 1s SLO for 10 minutes."
+
+  - name: argus-availability
+    rules:
+      - alert: ArgusEngineDown
+        expr: argus_engine_up == 0
+        for: 1m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS forecasting engine down"
+          description: "argus_engine_up has been 0 for 1 minute (engine failed to warm)."
+
+      - alert: ArgusDegraded
+        expr: argus_degraded == 1
+        for: 2m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS serving cached snapshot (degraded)"
+          description: "argus_degraded has been 1 for 2 minutes — live simulation paused."
+
+      - alert: ArgusTargetMissing
+        expr: up{job="argus-copilot"} == 0
+        for: 2m
+        labels: { severity: page, service: argus-copilot }
+        annotations:
+          summary: "ARGUS scrape target missing"
+          description: "Prometheus cannot scrape the ARGUS API for 2 minutes."
+
+  - name: argus-security
+    rules:
+      - alert: ArgusPromptInjectionSpike
+        expr: delta(argus_nlu_injection_detections[15m]) > 20
+        for: 0m
+        labels: { severity: warning, service: argus-copilot }
+        annotations:
+          summary: "ARGUS prompt-injection spike"
+          description: "More than 20 prompt-injection detections in 15 minutes."
+
+      - alert: ArgusEntailmentViolations
+        expr: delta(argus_entailment_violations[10m]) > 5
+        for: 5m
+        labels: { severity: ticket, service: argus-copilot }
+        annotations:
+          summary: "ARGUS faithfulness violations rising"
+          description: "More than 5 entailment-gate violations in 10 minutes."

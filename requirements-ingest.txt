@@ -1,0 +1,3 @@
+httpx>=0.27
+h3>=4.0          # H3 geo-cells; worker degrades to 0.5-degree grid without it
+aiokafka>=0.10   # KafkaBus backend; FileBus spool used when ARGUS_KAFKA_BROKERS unset

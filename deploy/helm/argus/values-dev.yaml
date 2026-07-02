@@ -1,0 +1,23 @@
+# Dev overrides — single replica, fast mode, auth off, no autoscaling/ingress/cron.
+replicaCount: 1
+env:
+  ARGUS_FAST: "1"
+  ARGUS_DB: /data/copilot.db
+  ARGUS_CORS_ORIGINS: "*"
+  ARGUS_AUTH_ENABLED: "0"
+secret:
+  name: ""                       # dev needs no external secret
+resources:
+  requests: { cpu: "250m", memory: 512Mi }
+  limits:   { cpu: "1", memory: 2Gi }
+persistence:
+  enabled: true
+  size: 2Gi
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false
+cronjobs:
+  pipeline: { enabled: false }
+  retrain: { enabled: false }
+  bands: { enabled: false }

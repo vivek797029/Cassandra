@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+pytest-cache-files-*/
+.pytest-cache-files-*/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local data / runtime artifacts (not source)
+*.db
+*.db-wal
+*.db-shm
+output/*.db
+output/last_good_snapshot.json
+output/theta_deployed.json
+/tmp/
+
+# Node / frontend build
+node_modules/
+frontend/react/dist/
+frontend/react/node_modules/
+
+# Secrets & env
+.env
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db

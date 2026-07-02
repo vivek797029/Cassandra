@@ -1,0 +1,11 @@
+[
+  {"query": "oil shock from a Gulf conflict threatening a strait",
+   "tags": ["oil_shock", "strait_closure", "regional_war"],
+   "relevant": ["c05", "c07", "c08", "c09", "c15"]},
+  {"query": "financial contagion and sovereign default",
+   "tags": ["financial_crisis", "sovereign_default", "contagion"],
+   "relevant": ["c21", "c22", "c23", "c24", "c25"]},
+  {"query": "great-power nuclear brinkmanship that de-escalated",
+   "tags": ["nuclear_crisis", "great_power", "de_escalation"],
+   "relevant": ["c04", "c41", "c43", "c46"]}
+]

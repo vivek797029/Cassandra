@@ -1,0 +1,11 @@
+{
+  "_comment": "Task 75 — clearance classification registry. record: fact_id -> level; cell: fact_id -> {field: level}; domain: domain -> default level. Levels: OPEN|CONFIDENTIAL|SECRET|TOPSECRET. Anything unlisted defaults to OPEN.",
+  "record": {
+    "F1": "SECRET",
+    "F4": "CONFIDENTIAL"
+  },
+  "cell": {
+    "F2": { "source": "SECRET" }
+  },
+  "domain": {}
+}

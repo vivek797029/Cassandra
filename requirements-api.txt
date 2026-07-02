@@ -1,0 +1,8 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+httpx>=0.27
+pydantic>=2.7
+psycopg[binary]>=3.2
+pydantic-settings>=2.5
+pyjwt[crypto]>=2.3                # Task 74: gateway JWT verification (HS256 dev, RS256/JWKS for OIDC)
+prometheus-client>=0.20           # Task 79: Prometheus /metrics exposition

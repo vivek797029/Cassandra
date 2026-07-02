@@ -1,0 +1,63 @@
+{
+ "n_scored": 225,
+ "brier": 0.1295,
+ "log_score": 0.3979,
+ "base_rate": 0.6089,
+ "brier_climatology": 0.2381,
+ "brier_skill_score": 0.4563,
+ "ece": 0.148,
+ "by_stratum": {
+  "economic|30d": {
+   "n": 52,
+   "brier": 0.1346,
+   "avg_p": 0.3846,
+   "base_rate": 0.3269
+  },
+  "economic|60d": {
+   "n": 52,
+   "brier": 0.1254,
+   "avg_p": 0.6154,
+   "base_rate": 0.5962
+  },
+  "economic|90d": {
+   "n": 43,
+   "brier": 0.1272,
+   "avg_p": 0.4814,
+   "base_rate": 0.7209
+  },
+  "security|30d": {
+   "n": 39,
+   "brier": 0.01,
+   "avg_p": 0.5718,
+   "base_rate": 0.5897
+  },
+  "security|60d": {
+   "n": 39,
+   "brier": 0.25,
+   "avg_p": 0.5,
+   "base_rate": 0.8974
+  }
+ },
+ "reliability_bins": [
+  {
+   "bin": "0.1-0.2",
+   "n": 54,
+   "avg_p": 0.1,
+   "freq": 0.0
+  },
+  {
+   "bin": "0.5-0.6",
+   "n": 112,
+   "avg_p": 0.5,
+   "freq": 0.6964
+  },
+  {
+   "bin": "0.9-1.0",
+   "n": 59,
+   "avg_p": 0.9,
+   "freq": 1.0
+  }
+ ],
+ "scored_at": 1783020295.5819528,
+ "manifest_id": "a08681af9a02982b"
+}

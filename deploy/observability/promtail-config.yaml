@@ -1,0 +1,36 @@
+# Task 80 — promtail → Loki pipeline for ARGUS structured JSON logs.
+# The app logs one JSON object per line to stdout; this parses it, promotes
+# low-cardinality fields to labels, and keeps request_id as structured metadata
+# so you can `{job="argus-copilot"} | json | request_id="<id>"` to trace a request.
+server:
+  http_listen_port: 9080
+positions:
+  filename: /run/promtail/positions.yaml
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+scrape_configs:
+  - job_name: argus-copilot
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: argus-copilot
+          __path__: /var/log/pods/argus_*copilot*/*/*.log
+    pipeline_stages:
+      - cri: {}                       # unwrap the kubernetes CRI envelope
+      - json:
+          expressions:
+            level: level
+            logger: logger
+            path: path
+            status: status
+            request_id: request_id
+            ts: ts
+      - timestamp:
+          source: ts
+          format: RFC3339
+      - labels:                       # low-cardinality → labels
+          level:
+          logger:
+          status:
+      - structured_metadata:          # high-cardinality → structured metadata
+          request_id:

@@ -1,0 +1,2 @@
+# Task 69 — load testing (not needed at API runtime)
+locust>=2.30
