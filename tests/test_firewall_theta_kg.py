@@ -1,5 +1,5 @@
 """Tasks 52-56 — firewall, theta registry+promotion, retrain ratchet, KG loader, evidence API."""
-import json, os, sys, time
+import os, sys
 from datetime import datetime, timezone
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 

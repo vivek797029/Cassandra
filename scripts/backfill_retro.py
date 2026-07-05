@@ -78,6 +78,18 @@ def freeze(n: int = N_DEFAULT, seed: int = SEED) -> dict:
                 "strata": {"domains": DOMAINS, "horizons": HORIZONS, "families": FAMILIES,
                            "cells": len(sc), "min_cell": min(sc.values())},
                 "sha256": content_hash(qs), "frozen_at": time.strftime("%Y-%m-%dT%H:%M:%SZ")}
+    # Idempotent freeze: if the frozen content is identical (same sha256 and
+    # parameters), keep the existing manifest — a frozen benchmark must not
+    # rewrite its own freeze timestamp every time tests re-run it.
+    if os.path.exists(MANIFEST):
+        try:
+            with open(MANIFEST, encoding="utf-8") as f:
+                old = json.load(f)
+            if all(old.get(k) == manifest[k] for k in
+                   ("name", "version", "n", "seed", "window", "strata", "sha256")):
+                return old
+        except (json.JSONDecodeError, OSError):
+            pass                                   # unreadable → rewrite below
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(MANIFEST, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)

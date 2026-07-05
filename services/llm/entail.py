@@ -110,8 +110,7 @@ def gate(markdown: str, objs: dict) -> dict:
 
 def enforce(markdown: str, objs: dict) -> tuple[str, dict]:
     """Return markdown with unfaithful sentences blocked, plus the report."""
-    corpus = build_corpus(objs)
-    report = gate(markdown, objs)
+    report = gate(markdown, objs)          # gate() builds its own corpus
     if report["faithful"]:
         return markdown, report
     bad = {v["sentence"] for v in report["violations"]}

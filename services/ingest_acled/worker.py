@@ -24,7 +24,7 @@ Normalization (ingestion contract, same as GDELT worker):
 Dedup: (source='acled', source_id=event_id_cnty).
 """
 from __future__ import annotations
-import argparse, csv, io, json, os, sys, time
+import argparse, csv, json, os, sys
 from datetime import datetime, timezone, timedelta
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))

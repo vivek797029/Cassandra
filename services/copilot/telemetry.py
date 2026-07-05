@@ -7,7 +7,6 @@ refreshed on scrape from the live subsystems; the request metrics are driven by
 the middleware in main.py.
 """
 from __future__ import annotations
-import time
 
 from prometheus_client import (Counter, Histogram, Gauge, CollectorRegistry,
                                generate_latest, CONTENT_TYPE_LATEST)

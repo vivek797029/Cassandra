@@ -14,7 +14,7 @@ import argparse, hashlib, json, os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 import numpy as np
-from core.engine import WorldEngine, THETA_DEFAULT, THETA_NAMES
+from core.engine import WorldEngine, THETA_NAMES
 from novelty.cassandra import CalibrationTrainer, brier, transfer_theta
 
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))

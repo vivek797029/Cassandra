@@ -21,7 +21,7 @@ CLI:
 """
 from __future__ import annotations
 import argparse, json, os, sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from services.question_registry.registry import QuestionRegistry

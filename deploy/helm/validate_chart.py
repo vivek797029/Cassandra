@@ -10,7 +10,7 @@ still run in CI (see .github/workflows/ci.yml `helm` job).
     python deploy/helm/validate_chart.py
 """
 from __future__ import annotations
-import os, re, sys, yaml
+import os, re, yaml
 
 CHART = os.path.join(os.path.dirname(os.path.abspath(__file__)), "argus")
 _TPL = re.compile(r"{{.*?}}")

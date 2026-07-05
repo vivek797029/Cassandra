@@ -15,7 +15,9 @@ env/
 *.db
 *.db-wal
 *.db-shm
+*.db-journal
 output/*.db
+output/calibration.json
 output/last_good_snapshot.json
 output/theta_deployed.json
 /tmp/

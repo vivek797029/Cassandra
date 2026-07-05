@@ -19,7 +19,7 @@ Boot layer (requires a Docker daemon — run on your machine):
 Exit code 0 = PASS, 1 = any failure.
 """
 from __future__ import annotations
-import argparse, json, os, re, subprocess, sys, time
+import argparse, json, os, subprocess, sys, time
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 COMPOSE = os.path.join(ROOT, "deploy", "docker", "docker-compose.yml")

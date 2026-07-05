@@ -204,6 +204,16 @@ class Store:
         return {"theta_hash": theta_hash, "bands": bands, "n_paths": rows[0][5],
                 "fidelity": rows[0][6], "computed_at": rows[0][7]}
 
+    def bands_delete(self, theta_hash: str) -> int:
+        """Flush cached bands for one theta (ops tooling: recover from a stale or
+        corrupt band cache without touching the rest of the store). Returns rows
+        removed. Also used by tests to leave shared backends clean."""
+        with self._lock:
+            cur = self.conn.execute("DELETE FROM band_cache WHERE theta_hash=?",
+                                    (theta_hash,))
+            self.conn.commit()
+        return cur.rowcount
+
     # dissents / right-of-reply (Task 87) --------------------------------------
     def dissent_save(self, fkey: str, author: str, clearance: str, text: str,
                      signature: str, created_at: float | None = None) -> str:

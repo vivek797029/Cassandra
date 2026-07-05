@@ -44,7 +44,7 @@ scale (GDELT/ICEWS-sized event sets) is future work — see README.
 from __future__ import annotations
 import numpy as np
 from core.engine import (WorldEngine, THETA_DEFAULT, THETA_LO, THETA_HI, THETA_NAMES,
-                         clip_theta, replay_event_probs, event_probs, WorldState)
+                         clip_theta, replay_event_probs, event_probs)
 
 EPS = 1e-6
 

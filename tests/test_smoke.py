@@ -2,8 +2,7 @@
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import numpy as np
-from core.engine import (WorldEngine, THETA_DEFAULT, THETA_LO, THETA_HI,
-                         event_probs, replay_event_probs, RESOLVED_EVENTS)
+from core.engine import (WorldEngine, THETA_DEFAULT, event_probs, replay_event_probs)
 from core.phases import load_situation, ScenarioEngine
 from novelty.cassandra import (CalibrationTrainer, Adversary, ConformalLayer,
                                InterventionSearch, brier, to_z, to_theta)

@@ -4,7 +4,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import pytest
 from services.copilot.config import reset_settings_cache
-from services.ingest_common import bus as busmod
 from services.ingest_common.bus import FileBus, get_bus, reset_bus, RAW_TOPICS, TOPIC_NORMALIZED
 from services.ingest_common.sink import RawEventSink
 from services.ingest_common import normalize

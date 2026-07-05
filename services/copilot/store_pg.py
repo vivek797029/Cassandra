@@ -10,7 +10,7 @@ All SQL lives in the module-level SQL dict so tests can validate every
 statement under the real PostgreSQL grammar (pglast) without a server.
 """
 from __future__ import annotations
-import json, os, time, uuid
+import json, os, uuid
 
 import psycopg
 from psycopg.rows import dict_row
@@ -199,6 +199,12 @@ class PgStore:
                             "conformal_q80": r["conformal_q80"]} for r in rows}
         return {"theta_hash": theta_hash, "bands": bands, "n_paths": rows[0]["n_paths"],
                 "fidelity": rows[0]["fidelity"], "computed_at": rows[0]["computed_at"]}
+
+    def bands_delete(self, theta_hash: str) -> int:
+        """Flush cached bands for one theta (same contract as the SQLite store)."""
+        with self.conn.cursor() as cur:
+            cur.execute("DELETE FROM band_cache WHERE theta_hash = %s", (theta_hash,))
+            return cur.rowcount
 
     # dissents / right-of-reply (Task 87) --------------------------------------
     def dissent_save(self, fkey: str, author: str, clearance: str, text: str,

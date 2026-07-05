@@ -8,7 +8,6 @@ CASSANDRA Core CLI
 """
 import sys, os, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import numpy as np
 from core.engine import WorldEngine, THETA_DEFAULT, event_probs
 from novelty.cassandra import CalibrationTrainer, Adversary, InterventionSearch
 

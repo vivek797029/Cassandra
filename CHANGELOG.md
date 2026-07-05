@@ -7,6 +7,51 @@ embedded in `docs/openapi/openapi.json`).
 
 ## [Unreleased]
 
+## [3.0.1] — 2026-07-05 — Test-isolation & serving-integrity hardening
+
+Root-caused and fixed a state-pollution defect: `tests/test_bands.py` wrote marker bands into
+the *configured* store, and because `get_settings()`/`get_store()` are process-cached
+singletons, the per-module `ARGUS_DB` setdefault lines never actually isolated anything —
+whichever module imported first pinned one shared DB for the whole run. Under the documented
+dev flow (`scripts/dev_setup.sh` exports `ARGUS_DB`) the markers persisted across runs, and the
+next API boot served placeholder bands (0.111/0.222) inconsistent with live probabilities.
+
+### Fixed
+- **Real store isolation for tests** (`tests/conftest.py`, new): autouse module-scoped fixture
+  gives every test module a fresh throwaway SQLite file and resets the settings cache + store
+  singleton on entry/exit. Suite is now green on a *reused* `ARGUS_DB` (previously failed).
+- **`tests/test_bands.py`**: markers are now consistent with the live baseline, all writes to
+  the live `theta_hash` clean up after themselves (safe on the shared PostgreSQL CI backend),
+  and a new regression test proves a poisoned cache is rejected, purged, and recomputed.
+- **CI never triggered on push** (`.github/workflows/ci.yml`): `on.push.branches` said `main`
+  but the repo's default branch is `master`; both now trigger.
+- **RETRO-CAST freeze is idempotent** (`scripts/backfill_retro.py`): re-freezing identical
+  content no longer rewrites `frozen_at`, so test runs stop dirtying the frozen manifest.
+- **Dead compute** (`services/llm/entail.py`): removed an unused `build_corpus()` call in
+  `enforce()`; 30 unused imports removed repo-wide (ruff F401).
+
+### Added
+- **Band-cache consistency guard** (`services/copilot/engines.py`): a cached band is served
+  only if the freshly simulated baseline probability falls inside it for every headline key —
+  the API's own published contract; inconsistent caches are purged (self-healing) and bands
+  recomputed.
+- **`Store.bands_delete(theta_hash)`** on both SQLite and PostgreSQL stores: ops tooling to
+  flush a stale/corrupt band cache; used by the guard and by test cleanup.
+- **Lint gate in CI** (`ruff check .`, config in new `pyproject.toml`): F/E9 defect classes
+  enforced; deliberate compact house style (E401/E701/E702/E731/E402) documented and kept.
+
+### Changed
+- **FastAPI lifespan** (`services/copilot/main.py`): startup warm-up moved from the deprecated
+  `@app.on_event("startup")` to the lifespan context manager (no behavior change).
+- **Parameterized threshold SQL** (`services/ingest_common/series.py`): `first_crossing` now
+  binds the threshold as a query parameter; `OPS` is an operator allow-list only (was safe by
+  construction via `float()` coercion — now safe by form; bandit B608 clean).
+- **SHA-1 in analog mining marked non-cryptographic** (`novelty/analogs.py`):
+  `usedforsecurity=False` on the Weisfeiler-Lehman label hash (bandit B324 clean).
+- **Runtime artifacts untracked**: `output/calibration.json` and `output/copilot.db-journal`
+  removed from version control (regenerated at runtime; test runs no longer dirty the tree);
+  `.gitignore` covers `*.db-journal` and `output/calibration.json`.
+
 ## [3.0.0] — 2026-06-28 — Production go-live (Phase-3 complete)
 
 Tasks 95–100: accreditation pack, RETRO-CAST backfill, 24/7 watch + game-day, performance/cost

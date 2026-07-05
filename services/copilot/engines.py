@@ -137,12 +137,27 @@ class Engines:
 
     def _load_or_compute_bands(self, fast: bool):
         """Task 83: serve the nightly full-fidelity bands for this theta if cached
-        (so a fast-startup API still shows full-fidelity bands); else compute."""
+        (so a fast-startup API still shows full-fidelity bands); else compute.
+
+        Consistency guard: a cached band is only trusted if the freshly simulated
+        baseline probability falls inside it (lo <= p <= hi) for every headline
+        key — the API's own published contract. A violation means the cache is
+        stale or corrupt (wrong writer, polluted store, schema drift); serving it
+        would ship self-contradictory forecasts, so we drop it and recompute."""
         try:
             from services.copilot.store import get_store
             cached = get_store().bands_get(self.theta_hash)
             if cached and all(k in cached["bands"] for k in BAND_KEYS):
-                return cached["bands"], f"cache:{cached.get('fidelity', '?')}"
+                bands = cached["bands"]
+                consistent = all(
+                    bands[k]["lo"] <= self.events[k] <= bands[k]["hi"]
+                    for k in BAND_KEYS if self.events.get(k) is not None)
+                if consistent:
+                    return bands, f"cache:{cached.get('fidelity', '?')}"
+                try:                                   # self-heal: purge the bad rows
+                    get_store().bands_delete(self.theta_hash)
+                except Exception:
+                    pass
         except Exception:
             pass
         n_probe, n_paths = (6, 1200) if fast else (20, 3000)

@@ -8,7 +8,7 @@ DISCOVERED by clustering ensemble paths rather than hand-written.
 from __future__ import annotations
 import json, os
 import numpy as np
-from core.engine import WorldEngine, event_probs, theta_dict
+from core.engine import WorldEngine, theta_dict
 
 DATA = os.path.join(os.path.dirname(__file__), "..", "data", "situation.json")
 

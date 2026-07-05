@@ -1,0 +1,17 @@
+# Tooling configuration (no packaging — this repo is run in place).
+
+[tool.ruff]
+target-version = "py310"
+line-length = 110
+extend-exclude = ["frontend", "deploy", "docs", "data", "output"]
+
+[tool.ruff.lint]
+# F/E9: real defects (undefined names, unused imports/vars, syntax).
+# Deliberate house style, kept: compact multi-imports (E401), semicolon
+# one-liners (E702/E701), sys.path bootstrap before imports (E402),
+# short lambdas (E731).
+select = ["F", "E9"]
+
+[tool.ruff.lint.per-file-ignores]
+# Test modules import app modules after env setup lines by design.
+"tests/*" = ["E402"]

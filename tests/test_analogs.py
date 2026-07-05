@@ -4,7 +4,6 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 os.environ.setdefault("ARGUS_FAST", "1")
 
-import numpy as np
 from novelty import analogs as A
 from services.kg.cases import _jaccard
 

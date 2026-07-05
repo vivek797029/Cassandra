@@ -44,7 +44,8 @@ def _wl_labels(channels, domain, iters=2):
         new = {}
         for n in nodes:
             sig = labels[n] + "|" + "".join(sorted(labels[m] for m in adj[n]))
-            new[n] = hashlib.sha1(sig.encode()).hexdigest()[:8]
+            # WL label compression — stable non-cryptographic fingerprint only
+            new[n] = hashlib.sha1(sig.encode(), usedforsecurity=False).hexdigest()[:8]
         labels = new
         multiset += list(labels.values())
     return multiset

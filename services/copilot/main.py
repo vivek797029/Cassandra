@@ -7,6 +7,8 @@ import os, sys, time, hmac, hashlib
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, Response, Depends
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -37,7 +39,20 @@ def _app_version() -> str:
     except Exception:
         return "0.0.0"
 
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    """Startup warm-up (modern lifespan API — @app.on_event is deprecated):
+    engines, store and question registry are built eagerly; a last-known-good
+    read snapshot is captured for graceful degradation (Task 70)."""
+    get_engines(); get_store(); get_registry()   # registry seeds engine questions idempotently
+    try:
+        degrade.save_snapshot(get_engines())      # Task 70: capture last-known-good read snapshot
+    except Exception:
+        pass
+    yield
+
 app = FastAPI(title="ARGUS Strategic Intelligence Copilot", version=_app_version(),
+              lifespan=_lifespan,
               description="Conversational copilot over the cassandra-core engines. "
                           "All numbers come from scored engines; the LLM (optional) only parses intents.")
 app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origin_list,
@@ -79,14 +94,6 @@ from services.question_registry.api import router as questions_router, get_regis
 from services.kg.api import router as evidence_router
 app.include_router(questions_router)
 app.include_router(evidence_router)
-
-@app.on_event("startup")
-def _warm():
-    get_engines(); get_store(); get_registry()   # registry seeds engine questions idempotently
-    try:
-        degrade.save_snapshot(get_engines())      # Task 70: capture last-known-good read snapshot
-    except Exception:
-        pass
 
 # ---------------- Task 70: graceful degradation ----------------
 def get_source(response: Response | None = None):

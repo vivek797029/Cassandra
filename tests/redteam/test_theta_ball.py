@@ -11,7 +11,6 @@ Deterministic: fixed seeds, fixed probe count.
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 
-from core.engine import THETA_DEFAULT
 from novelty.cassandra import Adversary, transfer_theta, CalibrationTrainer
 
 HEADLINE_KEYS = ["ME_war_1y", "Hormuz_closure_by_end2027",

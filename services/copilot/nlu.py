@@ -3,7 +3,7 @@ Deterministic grammar-based intent parser (closed grammar per blueprint §11).
 Optional LLM assist via OLLAMA_URL env (constrained JSON), falling back to grammar.
 Numbers NEVER come from the LLM — it may only select intents/slots."""
 from __future__ import annotations
-import os, re, json, copy
+import re, json, copy
 import httpx
 
 INTENTS = ["FORECAST", "EXPLAIN", "CAUSE", "WHATIF", "POLICY", "EWI",

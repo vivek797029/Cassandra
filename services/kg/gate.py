@@ -15,7 +15,7 @@ import numpy as np
 import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from core.engine import THETA_NAMES, THETA_DEFAULT
-from services.kg.mechanisms import MECHANISM_CARDS, ALLOWED_STATUSES, card_for_param
+from services.kg.mechanisms import MECHANISM_CARDS, ALLOWED_STATUSES
 
 
 def gate_theta(theta, cards: list[dict] | None = None) -> tuple[np.ndarray, dict]:

@@ -2,7 +2,7 @@
 Builds a synthetic GDELT v2 export (61 tab-separated cols) incl. a duplicate ID,
 a geo-less row, and a malformed row; verifies parse, normalize, dedup, idempotency.
 """
-import io, os, sys, time, zipfile
+import os, sys, time, zipfile
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 import pytest

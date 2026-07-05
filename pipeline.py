@@ -8,11 +8,10 @@ import json, os, sys, time
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from core.engine import (WorldEngine, THETA_DEFAULT, THETA_NAMES, event_probs,
-                         theta_dict, RESOLVED_EVENTS)
+from core.engine import (WorldEngine, THETA_NAMES, event_probs)
 from core.phases import load_situation, CausalGraph, ScenarioEngine, explain_forecast, red_team_summary
 from novelty.cassandra import (CalibrationTrainer, Adversary, ConformalLayer,
-                               InterventionSearch, brier, transfer_theta, IDENTIFIED)
+                               InterventionSearch, transfer_theta, IDENTIFIED)
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 CHARTS = os.path.join(OUT, "charts")

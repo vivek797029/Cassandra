@@ -27,7 +27,9 @@ CREATE TABLE IF NOT EXISTS series_points(
   UNIQUE(series, ts));
 CREATE INDEX IF NOT EXISTS idx_series_ts ON series_points(series, ts);
 """
-OPS = {">": "value > {v}", ">=": "value >= {v}", "<": "value < {v}", "<=": "value <= {v}"}
+# Allow-listed comparison operators. Only the operator token is interpolated
+# into SQL; the threshold is always bound as a query parameter.
+OPS = {">": ">", ">=": ">=", "<": "<", "<=": "<="}
 
 
 class SeriesStore:
@@ -70,18 +72,19 @@ class SeriesStore:
     def first_crossing(self, series: str, op: str, value: float,
                        t0: float, t1: float) -> float | None:
         """Earliest ts in [t0, t1] where `value <op> threshold` holds, else None."""
-        cond = OPS[op].format(v=float(value))
+        op_sql = OPS[op]                       # KeyError on anything outside the allow-list
+        thresh = float(value)
         if self.backend == "postgres":
             q = (f"SELECT EXTRACT(EPOCH FROM ts)::float8 AS ts FROM series_points "
                  f"WHERE series = %s AND ts >= to_timestamp(%s) AND ts <= to_timestamp(%s) "
-                 f"AND {cond} ORDER BY ts LIMIT 1")
+                 f"AND value {op_sql} %s ORDER BY ts LIMIT 1")
             with self.conn.cursor() as cur:
-                cur.execute(q, (series, t0, t1))
+                cur.execute(q, (series, t0, t1, thresh))
                 row = cur.fetchone()
             return float(row["ts"]) if row else None
         q = (f"SELECT ts FROM series_points WHERE series = ? AND ts >= ? AND ts <= ? "
-             f"AND {cond} ORDER BY ts LIMIT 1")
-        row = self.conn.execute(q, (series, t0, t1)).fetchone()
+             f"AND value {op_sql} ? ORDER BY ts LIMIT 1")
+        row = self.conn.execute(q, (series, t0, t1, thresh)).fetchone()
         return float(row[0]) if row else None
 
     def value_asof(self, series: str, ts: float) -> float | None:

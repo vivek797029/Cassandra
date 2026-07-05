@@ -3,7 +3,6 @@ import json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 import numpy as np
-import pytest
 from services.copilot.config import reset_settings_cache
 
 

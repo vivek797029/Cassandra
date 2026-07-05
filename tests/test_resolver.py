@@ -1,5 +1,5 @@
 """Task 48 — resolver v1 tests, incl. the acceptance gate: 20 retro questions auto-resolve."""
-import os, sys, time
+import os, sys
 from datetime import datetime, timezone
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
