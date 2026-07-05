@@ -7,8 +7,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Install
         run: |
@@ -52,8 +52,8 @@ jobs:
     env:
       DATABASE_URL: postgresql://argus:argus-dev-only@localhost:5432/argus
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Install
         run: |
@@ -65,8 +65,8 @@ jobs:
   frontend:                    # Task 58: type-check + vite build gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with: { node-version: "20" }
       - name: Install + build (tsc strict + vite)
         working-directory: frontend/react
@@ -83,8 +83,8 @@ jobs:
   loadtest:                    # Task 69: 100-user mixed-intent load test (cached p99 < 1s gate)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Install
         run: pip install -r requirements.txt -r requirements-api.txt -r requirements-bench.txt
@@ -95,8 +95,8 @@ jobs:
   helm:                        # Task 78: chart lint + render for each environment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: azure/setup-helm@v4
+      - uses: actions/checkout@v6
+      - uses: azure/setup-helm@v5
         with: { version: v3.14.4 }
       - name: helm lint (dev + prod values)
         run: |
@@ -110,7 +110,7 @@ jobs:
   alerts:                      # Task 81: Prometheus rule lint + synthetic-breach unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install promtool
         run: |
           VER=2.53.0
@@ -126,26 +126,26 @@ jobs:
   openapi:                     # Task 71: versioned OpenAPI export — drift gate + published artifact
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Install
         run: pip install -r requirements.txt -r requirements-api.txt
       - name: OpenAPI drift gate (committed artifact matches the live schema)
         run: python scripts/export_openapi.py --check
       - name: Publish OpenAPI artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: openapi-v1.0.0-${{ github.sha }}
+          name: openapi-${{ github.sha }}   # version lives inside the artifact (VERSION file)
           path: docs/openapi/
 
   docker:
     needs: [test, test-pg, frontend, loadtest, openapi]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'   # default branch (was `main` — job never ran)
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Change-control freeze gate (Task 99 — blocks releases mid-freeze)
         run: python scripts/change_control.py

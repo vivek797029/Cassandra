@@ -32,7 +32,11 @@ def test_every_rule_well_formed():
 
 
 def test_unit_tests_consistent_with_rules():
-    """Each promtool exp_alert mirrors its rule's labels+annotations exactly."""
+    """Each promtool exp_alert carries its rule's static labels and exact
+    annotations. Expected labels may include MORE than the rule's static set:
+    a fired alert inherits the matched series' labels too (e.g. `job` from
+    `up{job=...} == 0` — a filter, not an aggregation), so the rule's labels
+    must be a subset of exp_labels, not equal to them."""
     rules = _rules()
     doc = yaml.safe_load(open(ALERTS_TEST))
     seen = set()
@@ -44,7 +48,7 @@ def test_unit_tests_consistent_with_rules():
                 seen.add(name)
                 labels = {k: v for k, v in exp["exp_labels"].items() if k != "alertname"}
                 assert exp["exp_labels"].get("alertname") == name
-                assert labels == rules[name]["labels"], f"{name} label mismatch"
+                assert rules[name]["labels"].items() <= labels.items(), f"{name} label mismatch"
                 assert exp["exp_annotations"] == rules[name]["annotations"], f"{name} annotation mismatch"
     # the breaching alerts are all exercised by the unit tests
     assert {"ArgusHighErrorRate", "ArgusHighLatencyP99", "ArgusEngineDown",

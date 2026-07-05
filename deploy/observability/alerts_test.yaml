@@ -90,7 +90,10 @@ tests:
       - eval_time: 3m
         alertname: ArgusTargetMissing
         exp_alerts:
-          - exp_labels: { alertname: ArgusTargetMissing, severity: page, service: argus-copilot }
+          # `up{job=...} == 0` is a filter, not an aggregation — the fired alert
+          # keeps the series' `job` label, so the expectation must include it.
+          - exp_labels: { alertname: ArgusTargetMissing, severity: page,
+                          service: argus-copilot, job: argus-copilot }
             exp_annotations:
               summary: "ARGUS scrape target missing"
               description: "Prometheus cannot scrape the ARGUS API for 2 minutes."
