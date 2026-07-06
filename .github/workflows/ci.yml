@@ -148,6 +148,12 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
       - name: Change-control freeze gate (Task 99 — blocks releases mid-freeze)
+        # CAB approval is granted per release window via the repo variable
+        # CAB_APPROVED (Settings → Secrets and variables → Actions → Variables).
+        # Set it to "1" only while an approved change ships inside a freeze;
+        # remove it when the freeze ends so the gate re-arms.
+        env:
+          CAB_APPROVED: ${{ vars.CAB_APPROVED || '0' }}
         run: python scripts/change_control.py
       - name: Build image
         run: docker build -f deploy/docker/Dockerfile.api -t argus/copilot-api:${{ github.sha }} .
