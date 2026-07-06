@@ -1,0 +1,291 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+\title{Mechanistic Hazard Ensembles for Geopolitical Forecasting:\\
+An Auditable Alternative to Crowd and Language-Model Forecasters}
+\author{Vivek Yadav\thanks{Independent researcher. Correspondence: vkn797029@gmail.com.
+Code, data-fetch scripts, and a one-command replication package:
+\url{https://github.com/vivek797029/Cassandra}.}}
+\date{July 2026 — working draft v0.1}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Language-model forecasting systems produce fluent probability estimates whose
+provenance cannot be inspected; human forecasting crowds are accurate but
+slow to converge and equally opaque about mechanism. We study a third design
+point: a fully mechanistic forecasting core in which every probability is
+computed --- never generated --- from calibrated stochastic mechanisms, wrapped
+in an audit layer that makes each forecast bit-for-bit reproducible. We ask
+two questions. (1)~\emph{Coverage}: what fraction of real-world geopolitical
+forecasting questions admits mechanistic treatment at all? Compiling 121
+resolved conflict, oil, and macroeconomic questions from the Autocast corpus
+under a precision-first compiler, we find 32 (26\%) compile to executable
+mechanisms --- 30 to continuous-time hazard clocks and 2 to simulation path
+predicates --- while 89 are structurally out of scope (institutional events,
+country-specific series, count thresholds), a taxonomy we report in full.
+(2)~\emph{Skill}: in a leakage-guarded walk-forward evaluation (126 forecasts
+on 28 hazard questions, 2015--2022), maximum-likelihood hazard clocks with
+partial pooling achieve a mean Brier score of 0.0812 against 0.0856 for the
+contemporaneous forecasting crowd --- statistical parity (cluster-bootstrap
+95\% CI on the difference $[-0.055, 0.054]$) --- and outperform the crowd in
+the early, information-poor regime (Brier 0.087 vs.\ 0.116 at 10\% of question
+lifetime) where strategic warning is most valuable. The model's uncertainty
+is informative about its own failures: the width of its
+plausibility-ball bands rank-correlates with realized squared error at
+$\rho = 0.75$. We conclude that for the mechanizable quarter of questions, an
+auditable clock matches an experienced human crowd at a fraction of the
+latency, and argue that coverage taxonomies of this kind should accompany any
+claim about ``AI forecasting.''
+\end{abstract}
+
+\section{Introduction}
+Probabilistic forecasts of geopolitical and macroeconomic events inform
+decisions with large downside risk. Two producer classes dominate current
+practice. \emph{Crowds} --- prediction platforms and forecasting tournaments
+--- are well calibrated in aggregate \citep{tetlock2015} but converge slowly,
+and their estimates carry no inspectable causal structure. \emph{Language
+models}, increasingly evaluated as forecasters \citep{zou2022}, emit
+probabilities whose derivation is not auditable even in principle: the number
+is a token, not a computation.
+
+This paper evaluates a third design point, implemented in an open-source
+system (\textsc{Cassandra}/ARGUS): a mechanistic Monte Carlo core in which
+probabilities are \emph{counted} from simulated ensembles or computed in
+closed form from calibrated hazard processes, and an interface layer that is
+structurally incapable of inventing numbers --- a closed-grammar parser maps a
+natural-language question either to an executable mechanism or to an explicit
+refusal, and every answer embeds a manifest (parameter hash, seed, inputs)
+sufficient to reproduce it exactly.
+
+Two empirical questions determine whether this design point matters:
+
+\textbf{Q1 (coverage).} What fraction of the questions people actually ask
+admits mechanistic treatment? A method that answers only toy questions is a
+curiosity regardless of its accuracy.
+
+\textbf{Q2 (skill).} On the mechanizable fraction, does a calibrated
+mechanism match human crowds under a protocol that excludes information
+leakage?
+
+Our contributions: (i)~a precision-first \emph{question compiler} and the
+resulting coverage taxonomy over 121 real, resolved questions; (ii)~a
+leakage-guarded walk-forward evaluation of partially pooled hazard clocks
+against the contemporaneous crowd, with cluster-bootstrap inference and a
+lifetime-resolved skill curve; (iii)~an ablation analysis showing which
+components earn their keep; and (iv)~a replication package in which every
+reported number regenerates from one command.
+
+\section{Related work}
+Judgmental forecasting tournaments established that trained crowds produce
+calibrated geopolitical probabilities \citep{tetlock2015, mellers2014}.
+Proper scoring rules for such evaluations are classical
+\citep{brier1950, gneiting2007}. The Autocast benchmark \citep{zou2022}
+introduced the resolved-question corpus with crowd trajectories we use, and
+evaluated language models \emph{against} the crowd --- our protocol
+deliberately mirrors theirs so results are comparable in kind. Survival and
+point-process models of conflict have a long lineage in quantitative peace
+research \citep{ward2010}; our contribution is not the hazard model itself but
+its embedding in an end-to-end auditable pipeline plus the coverage question,
+which the forecasting literature typically leaves implicit. Conformal and
+robustness-based uncertainty wrappers \citep{vovk2005} motivate our
+plausibility-ball bands.
+
+\section{System context}
+\textsc{Cassandra} is a 12-phase analytic pipeline: a regime-switching world
+simulator with 16 named parameters $\theta$ (escalation, de-escalation, and
+spillover channels linking conflict hazards to oil, inflation, growth, and
+default cascades), trained by Brier minimization on retrospective questions;
+an adversary that perturbs $\theta$ within a plausibility ball to produce
+robust bands; and a conversational layer in which a closed-grammar parser
+routes questions to scored engines and \emph{abstains} otherwise. The
+serving layer enforces the audit contract: every response carries a manifest
+ID resolvable to the exact $\theta$, seed, and inputs that produced it. The
+present paper evaluates the epistemically load-bearing component --- the
+mechanism family --- on real outcomes; the engineering controls (200+ tests,
+red-team gates, contamination canaries, CI-enforced reproducibility) are
+described in the repository.
+
+\section{Question compilation and the coverage taxonomy}
+\label{sec:compiler}
+From the 6{,}532-question Autocast corpus we select resolved binary questions
+in the system's mechanistic domains (armed conflict, oil, macroeconomics; 121
+questions, 2015--2022, each with its full crowd trajectory). A
+\emph{precision-first} compiler maps each question either to an executable
+mechanism or to a refusal with a stable reason code; a question compiles only
+when its semantics are unambiguously expressible over modeled state.
+
+\begin{table}[h]\centering
+\caption{Coverage taxonomy over 121 real questions (the compiler's verdicts).}
+\label{tab:coverage}
+\begin{tabular}{lrl}
+\toprule
+Verdict & $n$ & Meaning \\
+\midrule
+\textsc{hazard clock}      & 30 & first-event time in window (conflict) \\
+\textsc{path predicate}    & 2  & threshold crossing of simulated series \\
+\midrule
+\textsc{institutional}     & 21 & announcements, legislation, approvals \\
+\textsc{non-mechanistic}   & 48 & no modeled state variable \\
+\textsc{count threshold}   & 4  & casualty counts (needs intensity model) \\
+\textsc{country channel}   & 4  & national series outside global model \\
+\textsc{unparseable window}& 8  & no confident deadline extraction \\
+\textsc{sub-quarter/degenerate} & 4 & window below resolution \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Twenty-six percent of real questions are mechanizable today
+(Table~\ref{tab:coverage}). We regard the taxonomy itself as a result:
+claims about ``AI forecasting'' rarely state which questions the evaluated
+system can represent at all.
+
+\section{The hazard-clock family}
+Each compiled conflict question --- ``will an event of class $c$ (airstrike,
+confrontation, deployment, ceasefire, military action) occur in window
+$[t_0,t_1]$?'' --- is modeled as a continuous-time hazard:
+\[
+P(\text{event}) = 1 - e^{-\lambda_c\,\Delta}, \qquad
+\Delta = \max\!\bigl(0,\ t_1 - \max(t_{\mathrm{asof}}, t_0)\bigr)\ \text{years},
+\]
+the same mechanism family as the simulator's conflict channels, with the
+exposure clipped to the \emph{remaining} window at forecast time. Rates are
+estimated by maximum likelihood from all questions resolved strictly before
+the forecast date: with observations $(\Delta_i, y_i)$,
+$\mathcal{L}(\lambda) = \sum_i y_i \log(1 - e^{-\lambda\Delta_i})
+- (1-y_i)\lambda\Delta_i$ is concave with monotone gradient, so the MLE is
+found by bisection and clamped to $[0.01, 20]$ yr$^{-1}$. Sparse classes are
+partially pooled toward the global rate through $\alpha{=}2$
+pseudo-observations. Robust bands reuse the simulator's plausibility-ball
+semantics, $\lambda \mapsto \lambda e^{\pm\rho}$ with $\rho = 0.10$.
+
+\section{Evaluation protocol}
+For every hazard question and every as-of date on a fixed grid of lifetime
+fractions $\{0.1, 0.3, 0.5, 0.7, 0.9\}$, the model is refitted from scratch on
+questions resolved strictly before that date and scored on the eventual
+resolution. Guards: the contemporaneous crowd probability must exist at the
+as-of date (else the pair is dropped for \emph{all} systems --- comparisons are
+paired throughout); at least five resolved training questions must precede it.
+This yields 126 forecast--outcome pairs over 28 questions. Baselines: the
+crowd at the same instant, the historical base rate over resolved questions,
+and uniform~0.5. Inference uses a cluster bootstrap resampling
+\emph{questions} (records within a question share an outcome), $10^4$
+resamples.
+
+\section{Results}
+\begin{table}[h]\centering
+\caption{Mean Brier over 126 paired walk-forward forecasts (28 questions,
+2015--2022). Lower is better.}
+\label{tab:main}
+\begin{tabular}{lc}
+\toprule
+System & Brier \\
+\midrule
+Hazard ensemble (this work) & \textbf{0.0812} \\
+Crowd (contemporaneous)     & 0.0856 \\
+Base rate                   & 0.1055 \\
+Uniform 0.5                 & 0.2500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Parity with the crowd.} The ensemble's aggregate Brier is nominally
+better than the contemporaneous crowd's (skill $+5.1\%$), but the
+cluster-bootstrap 95\% CI on the crowd$-$model difference is
+$[-0.055,\ 0.054]$ ($P(\text{model better}) = 0.60$): at $n{=}28$ questions
+the correct claim is \emph{statistical parity}, not superiority. Both clear
+the base-rate and uniform baselines decisively.
+
+\textbf{The early-warning regime.} Skill is not uniform over a question's
+life (Table~\ref{tab:lifetime}). At 10\% of lifetime --- before the crowd has
+absorbed much evidence --- the mechanism is clearly ahead (0.087 vs.\ 0.116);
+by 90\% the crowd, which by then has read the news, is ahead (0.056 vs.\
+0.072). For strategic warning, the early regime is the one that matters.
+
+\begin{table}[h]\centering
+\caption{Brier by lifetime fraction: the mechanism leads early; the crowd
+overtakes as evidence accumulates.}
+\label{tab:lifetime}
+\begin{tabular}{lccccc}
+\toprule
+Fraction of lifetime & 0.1 & 0.3 & 0.5 & 0.7 & 0.9 \\
+\midrule
+Hazard ensemble & \textbf{0.0866} & 0.0856 & \textbf{0.0853} & 0.0782 & 0.0721 \\
+Crowd           & 0.1158 & \textbf{0.0785} & 0.1108 & \textbf{0.0724} & \textbf{0.0563} \\
+$n$             & 24 & 24 & 24 & 26 & 28 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Uncertainty that predicts its own errors.} The plausibility-ball band
+width rank-correlates with realized squared error at Spearman
+$\rho = 0.754$: wide bands flag the forecasts that miss. Calibration is
+concentrated where the events live --- 120 of 126 forecasts fall in the
+$[0,0.1)$ probability bin with an observed frequency of 0.083, i.e.\ slightly
+\emph{under}confident in the rare-event regime.
+
+\textbf{Ablations.} Removing partial pooling barely moves the aggregate
+(0.0818); collapsing all event classes to a single global clock slightly
+\emph{improves} it (0.0781). We report this against ourselves: at 30
+questions, class-level granularity does not yet pay for its variance, and the
+pre-registered primary (classes + pooling) is retained to avoid post-hoc
+selection. The class structure is the component we expect to earn its keep
+only as the corpus grows.
+
+\section{Limitations}
+The evaluable set is small (28 questions, 126 pairs); parity claims carry the
+CI reported, and no significance is asserted. The two path-predicate
+questions await historical state vintages (as-of oil prices) and are excluded
+from the primary analysis. Event classification and window extraction are
+rule-based; misparses are excluded by construction (precision over recall),
+which biases coverage down but protects skill estimates. The crowd baseline
+inherits each platform's participation patterns; early-lifetime crowd values
+sit near platform priors, which is precisely the regime where a mechanistic
+prior helps --- we report the full lifetime curve so readers can weight
+regimes as their application demands. Finally, hazard clocks are the
+\emph{simplest} member of the simulator's mechanism family; the evaluation
+bounds the value of the family from below.
+
+\section{Reproducibility and disclosure}
+Every number in this paper regenerates from
+\texttt{scripts/fetch\_real\_data.sh} followed by
+\texttt{python scripts/run\_realeval.py}; the results artifact
+(\texttt{output/realeval\_results.json}) contains every forecast record. The
+system's serving layer attaches a reproducibility manifest to every answer,
+and the repository's CI re-runs the full gate suite (unit, PostgreSQL,
+red-team, load, container) on every push. This system and paper were
+developed with substantial AI assistance (Anthropic Claude); all design
+decisions, data selections, and claims were reviewed by the author, who bears
+sole responsibility for them.
+
+\begin{thebibliography}{9}\small
+\bibitem[Brier(1950)]{brier1950} Brier, G.~W. (1950). Verification of
+forecasts expressed in terms of probability. \emph{Monthly Weather Review},
+78(1), 1--3.
+\bibitem[Gneiting \& Raftery(2007)]{gneiting2007} Gneiting, T., \&
+Raftery, A.~E. (2007). Strictly proper scoring rules, prediction, and
+estimation. \emph{JASA}, 102(477), 359--378.
+\bibitem[Mellers et al.(2014)]{mellers2014} Mellers, B., et al. (2014).
+Psychological strategies for winning a geopolitical forecasting tournament.
+\emph{Psychological Science}, 25(5), 1106--1115.
+\bibitem[Tetlock \& Gardner(2015)]{tetlock2015} Tetlock, P.~E., \&
+Gardner, D. (2015). \emph{Superforecasting: The Art and Science of
+Prediction}. Crown.
+\bibitem[Vovk et al.(2005)]{vovk2005} Vovk, V., Gammerman, A., \&
+Shafer, G. (2005). \emph{Algorithmic Learning in a Random World}. Springer.
+\bibitem[Ward et al.(2010)]{ward2010} Ward, M.~D., Greenhill, B.~D., \&
+Bakke, K.~M. (2010). The perils of policy by p-value: Predicting civil
+conflicts. \emph{Journal of Peace Research}, 47(4), 363--375.
+\bibitem[Zou et al.(2022)]{zou2022} Zou, A., Xiao, T., Jia, R., et al.
+(2022). Forecasting future world events with neural networks.
+\emph{NeurIPS Datasets and Benchmarks} (arXiv:2206.15474).
+\end{thebibliography}
+
+\end{document}

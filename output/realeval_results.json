@@ -1,0 +1,1753 @@
+{
+ "primary": {
+  "n": 126,
+  "n_questions": 28,
+  "mean_brier": {
+   "model": 0.0812,
+   "crowd": 0.0856,
+   "base_rate": 0.1055,
+   "uniform": 0.25
+  },
+  "skill_vs_crowd": 0.0511,
+  "reliability": [
+   {
+    "bin": "0.0-0.1",
+    "n": 120,
+    "mean_outcome": 0.0833
+   },
+   {
+    "bin": "0.1-0.2",
+    "n": 1,
+    "mean_outcome": 0.0
+   },
+   {
+    "bin": "0.2-0.3",
+    "n": 5,
+    "mean_outcome": 0.0
+   },
+   {
+    "bin": "0.3-0.4",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.4-0.5",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.5-0.6",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.6-0.7",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.7-0.8",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.8-0.9",
+    "n": 0,
+    "mean_outcome": null
+   },
+   {
+    "bin": "0.9-1.0",
+    "n": 0,
+    "mean_outcome": null
+   }
+  ],
+  "band_width_mean": 0.006,
+  "band_error_rank_corr": 0.7537
+ },
+ "bootstrap_crowd_minus_model": {
+  "mean": 0.00446,
+  "ci95": [
+   -0.05516,
+   0.05376
+  ],
+  "p_model_better": 0.5954
+ },
+ "by_lifetime_fraction": [
+  {
+   "fraction": 0.1,
+   "n": 24,
+   "brier_model": 0.0866,
+   "brier_crowd": 0.1158
+  },
+  {
+   "fraction": 0.3,
+   "n": 24,
+   "brier_model": 0.0856,
+   "brier_crowd": 0.0785
+  },
+  {
+   "fraction": 0.5,
+   "n": 24,
+   "brier_model": 0.0853,
+   "brier_crowd": 0.1108
+  },
+  {
+   "fraction": 0.7,
+   "n": 26,
+   "brier_model": 0.0782,
+   "brier_crowd": 0.0724
+  },
+  {
+   "fraction": 0.9,
+   "n": 28,
+   "brier_model": 0.0721,
+   "brier_crowd": 0.0563
+  }
+ ],
+ "records": [
+  {
+   "qid": "G602",
+   "event_class": "DEPLOYMENT",
+   "asof": "2017-11-27",
+   "p_model": 0.013044,
+   "band_lo": 0.01181,
+   "band_hi": 0.014405,
+   "p_crowd": 0.01,
+   "p_base": 0.363636,
+   "y": 0,
+   "n_train": 5
+  },
+  {
+   "qid": "G602",
+   "event_class": "DEPLOYMENT",
+   "asof": "2017-12-18",
+   "p_model": 0.004503,
+   "band_lo": 0.004075,
+   "band_hi": 0.004975,
+   "p_crowd": 0.0,
+   "p_base": 0.347826,
+   "y": 0,
+   "n_train": 5
+  },
+  {
+   "qid": "G490",
+   "event_class": "CONFRONTATION",
+   "asof": "2017-12-10",
+   "p_model": 0.006431,
+   "band_lo": 0.00582,
+   "band_hi": 0.007105,
+   "p_crowd": 0.01,
+   "p_base": 0.347826,
+   "y": 0,
+   "n_train": 5
+  },
+  {
+   "qid": "G419",
+   "event_class": "CONFRONTATION",
+   "asof": "2017-11-30",
+   "p_model": 0.009783,
+   "band_lo": 0.008856,
+   "band_hi": 0.010806,
+   "p_crowd": 0.01,
+   "p_base": 0.363636,
+   "y": 0,
+   "n_train": 5
+  },
+  {
+   "qid": "M435",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2017-11-17",
+   "p_model": 0.065417,
+   "band_lo": 0.059381,
+   "band_hi": 0.072044,
+   "p_crowd": 0.2,
+   "p_base": 0.363636,
+   "y": 0,
+   "n_train": 5
+  },
+  {
+   "qid": "M435",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-02-03",
+   "p_model": 0.036659,
+   "band_lo": 0.033229,
+   "band_hi": 0.040435,
+   "p_crowd": 0.15,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 8
+  },
+  {
+   "qid": "M924",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-06-05",
+   "p_model": 0.006511,
+   "band_lo": 0.005894,
+   "band_hi": 0.007194,
+   "p_crowd": 0.05,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "M924",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-06-25",
+   "p_model": 0.005035,
+   "band_lo": 0.004557,
+   "band_hi": 0.005563,
+   "p_crowd": 0.02,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "M924",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-07-14",
+   "p_model": 0.003631,
+   "band_lo": 0.003286,
+   "band_hi": 0.004012,
+   "p_crowd": 0.02,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "M924",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-08-02",
+   "p_model": 0.002225,
+   "band_lo": 0.002013,
+   "band_hi": 0.002458,
+   "p_crowd": 0.03,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "M924",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2018-08-22",
+   "p_model": 0.000742,
+   "band_lo": 0.000671,
+   "band_hi": 0.00082,
+   "p_crowd": 0.01,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "G818",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-01-22",
+   "p_model": 0.049913,
+   "band_lo": 0.045273,
+   "band_hi": 0.055016,
+   "p_crowd": 0.15,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 8
+  },
+  {
+   "qid": "G818",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-04-08",
+   "p_model": 0.033366,
+   "band_lo": 0.030239,
+   "band_hi": 0.036809,
+   "p_crowd": 0.15,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "G818",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-06-23",
+   "p_model": 0.024018,
+   "band_lo": 0.021758,
+   "band_hi": 0.026511,
+   "p_crowd": 0.14,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "G818",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-09-07",
+   "p_model": 0.013613,
+   "band_lo": 0.012326,
+   "band_hi": 0.015034,
+   "p_crowd": 0.1,
+   "p_base": 0.222222,
+   "y": 0,
+   "n_train": 10
+  },
+  {
+   "qid": "G818",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-11-22",
+   "p_model": 0.004715,
+   "band_lo": 0.004267,
+   "band_hi": 0.00521,
+   "p_crowd": 0.1,
+   "p_base": 0.222222,
+   "y": 0,
+   "n_train": 10
+  },
+  {
+   "qid": "G819",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-01-22",
+   "p_model": 0.049913,
+   "band_lo": 0.045273,
+   "band_hi": 0.055016,
+   "p_crowd": 0.065,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 8
+  },
+  {
+   "qid": "G819",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-04-08",
+   "p_model": 0.033366,
+   "band_lo": 0.030239,
+   "band_hi": 0.036809,
+   "p_crowd": 0.08,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "G819",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-06-23",
+   "p_model": 0.024018,
+   "band_lo": 0.021758,
+   "band_hi": 0.026511,
+   "p_crowd": 0.1,
+   "p_base": 0.235294,
+   "y": 0,
+   "n_train": 9
+  },
+  {
+   "qid": "G819",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-09-07",
+   "p_model": 0.013613,
+   "band_lo": 0.012326,
+   "band_hi": 0.015034,
+   "p_crowd": 0.1,
+   "p_base": 0.222222,
+   "y": 0,
+   "n_train": 10
+  },
+  {
+   "qid": "G819",
+   "event_class": "CONFRONTATION",
+   "asof": "2018-11-22",
+   "p_model": 0.004715,
+   "band_lo": 0.004267,
+   "band_hi": 0.00521,
+   "p_crowd": 0.07,
+   "p_base": 0.222222,
+   "y": 0,
+   "n_train": 10
+  },
+  {
+   "qid": "G1215",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-06-27",
+   "p_model": 0.003764,
+   "band_lo": 0.003406,
+   "band_hi": 0.004159,
+   "p_crowd": 0.1,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1215",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-07-09",
+   "p_model": 0.002958,
+   "band_lo": 0.002677,
+   "band_hi": 0.003269,
+   "p_crowd": 0.05,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1215",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-07-22",
+   "p_model": 0.002085,
+   "band_lo": 0.001887,
+   "band_hi": 0.002304,
+   "p_crowd": 0.1,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1215",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-08-03",
+   "p_model": 0.001279,
+   "band_lo": 0.001157,
+   "band_hi": 0.001413,
+   "p_crowd": 0.1,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1215",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-08-15",
+   "p_model": 0.000471,
+   "band_lo": 0.000426,
+   "band_hi": 0.000521,
+   "p_crowd": 0.07,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "M2926",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2019-07-13",
+   "p_model": 0.004617,
+   "band_lo": 0.004179,
+   "band_hi": 0.005101,
+   "p_crowd": 0.3,
+   "p_base": 0.244444,
+   "y": 1,
+   "n_train": 12
+  },
+  {
+   "qid": "M2926",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2019-07-23",
+   "p_model": 0.004069,
+   "band_lo": 0.003682,
+   "band_hi": 0.004495,
+   "p_crowd": 0.42,
+   "p_base": 0.244444,
+   "y": 1,
+   "n_train": 12
+  },
+  {
+   "qid": "M2926",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2019-08-01",
+   "p_model": 0.003575,
+   "band_lo": 0.003235,
+   "band_hi": 0.00395,
+   "p_crowd": 0.3,
+   "p_base": 0.244444,
+   "y": 1,
+   "n_train": 12
+  },
+  {
+   "qid": "M2926",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2019-08-11",
+   "p_model": 0.003025,
+   "band_lo": 0.002738,
+   "band_hi": 0.003343,
+   "p_crowd": 0.34,
+   "p_base": 0.244444,
+   "y": 1,
+   "n_train": 12
+  },
+  {
+   "qid": "M2926",
+   "event_class": "MILITARY_ACTION",
+   "asof": "2019-08-20",
+   "p_model": 0.002531,
+   "band_lo": 0.00229,
+   "band_hi": 0.002797,
+   "p_crowd": 0.34,
+   "p_base": 0.244444,
+   "y": 1,
+   "n_train": 12
+  },
+  {
+   "qid": "G1293",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-09-24",
+   "p_model": 0.00595,
+   "band_lo": 0.005385,
+   "band_hi": 0.006573,
+   "p_crowd": 0.05,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1293",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-05",
+   "p_model": 0.004694,
+   "band_lo": 0.004248,
+   "band_hi": 0.005186,
+   "p_crowd": 0.03,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1293",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-17",
+   "p_model": 0.003322,
+   "band_lo": 0.003007,
+   "band_hi": 0.003671,
+   "p_crowd": 0.025,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1293",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-29",
+   "p_model": 0.001949,
+   "band_lo": 0.001764,
+   "band_hi": 0.002154,
+   "p_crowd": 0.01,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1293",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-11-09",
+   "p_model": 0.000688,
+   "band_lo": 0.000623,
+   "band_hi": 0.000761,
+   "p_crowd": 0.0,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1292",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-09-24",
+   "p_model": 0.00595,
+   "band_lo": 0.005385,
+   "band_hi": 0.006573,
+   "p_crowd": 0.065,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1292",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-05",
+   "p_model": 0.004694,
+   "band_lo": 0.004248,
+   "band_hi": 0.005186,
+   "p_crowd": 0.04,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1292",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-17",
+   "p_model": 0.003322,
+   "band_lo": 0.003007,
+   "band_hi": 0.003671,
+   "p_crowd": 0.03,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1292",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-10-29",
+   "p_model": 0.001949,
+   "band_lo": 0.001764,
+   "band_hi": 0.002154,
+   "p_crowd": 0.02,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1292",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-11-09",
+   "p_model": 0.000688,
+   "band_lo": 0.000623,
+   "band_hi": 0.000761,
+   "p_crowd": 0.01,
+   "p_base": 0.26,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1055",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-01-15",
+   "p_model": 0.023359,
+   "band_lo": 0.021159,
+   "band_hi": 0.025783,
+   "p_crowd": 0.15,
+   "p_base": 0.238095,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1055",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-04-03",
+   "p_model": 0.018215,
+   "band_lo": 0.016496,
+   "band_hi": 0.020112,
+   "p_crowd": 0.125,
+   "p_base": 0.227273,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1055",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-06-20",
+   "p_model": 0.013045,
+   "band_lo": 0.011811,
+   "band_hi": 0.014407,
+   "p_crowd": 0.1,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 12
+  },
+  {
+   "qid": "G1055",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-09-06",
+   "p_model": 0.013337,
+   "band_lo": 0.012075,
+   "band_hi": 0.014729,
+   "p_crowd": 0.05,
+   "p_base": 0.25,
+   "y": 0,
+   "n_train": 14
+  },
+  {
+   "qid": "G1055",
+   "event_class": "CONFRONTATION",
+   "asof": "2019-11-23",
+   "p_model": 0.003847,
+   "band_lo": 0.003482,
+   "band_hi": 0.004251,
+   "p_crowd": 0.02,
+   "p_base": 0.245283,
+   "y": 0,
+   "n_train": 16
+  },
+  {
+   "qid": "G1639",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-05-31",
+   "p_model": 0.014615,
+   "band_lo": 0.013233,
+   "band_hi": 0.016139,
+   "p_crowd": 0.06,
+   "p_base": 0.254237,
+   "y": 1,
+   "n_train": 17
+  },
+  {
+   "qid": "G1639",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-03",
+   "p_model": 0.014378,
+   "band_lo": 0.013019,
+   "band_hi": 0.015878,
+   "p_crowd": 0.075,
+   "p_base": 0.254237,
+   "y": 1,
+   "n_train": 17
+  },
+  {
+   "qid": "G1639",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-07",
+   "p_model": 0.014063,
+   "band_lo": 0.012733,
+   "band_hi": 0.01553,
+   "p_crowd": 0.065,
+   "p_base": 0.254237,
+   "y": 1,
+   "n_train": 17
+  },
+  {
+   "qid": "G1639",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-10",
+   "p_model": 0.013826,
+   "band_lo": 0.012519,
+   "band_hi": 0.015269,
+   "p_crowd": 0.065,
+   "p_base": 0.254237,
+   "y": 1,
+   "n_train": 17
+  },
+  {
+   "qid": "G1639",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-14",
+   "p_model": 0.01351,
+   "band_lo": 0.012232,
+   "band_hi": 0.014921,
+   "p_crowd": 0.05,
+   "p_base": 0.266667,
+   "y": 1,
+   "n_train": 17
+  },
+  {
+   "qid": "C28",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-16",
+   "p_model": 0.046781,
+   "band_lo": 0.042425,
+   "band_hi": 0.051572,
+   "p_crowd": 0.1781,
+   "p_base": 0.290323,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "C28",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-10",
+   "p_model": 0.036385,
+   "band_lo": 0.03298,
+   "band_hi": 0.040134,
+   "p_crowd": 0.1346,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "C28",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-02",
+   "p_model": 0.026315,
+   "band_lo": 0.023841,
+   "band_hi": 0.029042,
+   "p_crowd": 0.1283,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "C28",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-26",
+   "p_model": 0.015695,
+   "band_lo": 0.014212,
+   "band_hi": 0.017331,
+   "p_crowd": 0.1101,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "C28",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-19",
+   "p_model": 0.00496,
+   "band_lo": 0.004489,
+   "band_hi": 0.00548,
+   "p_crowd": 0.0912,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1665",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-06-30",
+   "p_model": 0.04073,
+   "band_lo": 0.036927,
+   "band_hi": 0.044916,
+   "p_crowd": 0.35,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1665",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-20",
+   "p_model": 0.032019,
+   "band_lo": 0.029017,
+   "band_hi": 0.035327,
+   "p_crowd": 0.12,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1665",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-10",
+   "p_model": 0.022788,
+   "band_lo": 0.020642,
+   "band_hi": 0.025154,
+   "p_crowd": 0.1,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1665",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-31",
+   "p_model": 0.013468,
+   "band_lo": 0.012194,
+   "band_hi": 0.014874,
+   "p_crowd": 0.03,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1665",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-20",
+   "p_model": 0.00451,
+   "band_lo": 0.004081,
+   "band_hi": 0.004983,
+   "p_crowd": 0.08,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "M4683",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-06",
+   "p_model": 0.077303,
+   "band_lo": 0.070211,
+   "band_hi": 0.085077,
+   "p_crowd": 0.31,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "M4683",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-01",
+   "p_model": 0.066396,
+   "band_lo": 0.060272,
+   "band_hi": 0.073117,
+   "p_crowd": 0.3,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "M4683",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-27",
+   "p_model": 0.055359,
+   "band_lo": 0.050226,
+   "band_hi": 0.061,
+   "p_crowd": 0.28,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "M4683",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-22",
+   "p_model": 0.044193,
+   "band_lo": 0.040073,
+   "band_hi": 0.048725,
+   "p_crowd": 0.39,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "M4683",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-10-18",
+   "p_model": 0.030203,
+   "band_lo": 0.027369,
+   "band_hi": 0.033326,
+   "p_crowd": 0.32,
+   "p_base": 0.268657,
+   "y": 0,
+   "n_train": 20
+  },
+  {
+   "qid": "G1618",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-05-30",
+   "p_model": 0.015797,
+   "band_lo": 0.014304,
+   "band_hi": 0.017443,
+   "p_crowd": 0.03,
+   "p_base": 0.254237,
+   "y": 0,
+   "n_train": 17
+  },
+  {
+   "qid": "G1618",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-13",
+   "p_model": 0.067661,
+   "band_lo": 0.061424,
+   "band_hi": 0.074505,
+   "p_crowd": 0.05,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1618",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-08-27",
+   "p_model": 0.048503,
+   "band_lo": 0.043991,
+   "band_hi": 0.053465,
+   "p_crowd": 0.05,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1618",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-10-10",
+   "p_model": 0.026983,
+   "band_lo": 0.024447,
+   "band_hi": 0.029778,
+   "p_crowd": 0.02,
+   "p_base": 0.268657,
+   "y": 0,
+   "n_train": 20
+  },
+  {
+   "qid": "G1618",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-11-23",
+   "p_model": 0.008481,
+   "band_lo": 0.007677,
+   "band_hi": 0.009368,
+   "p_crowd": 0.01,
+   "p_base": 0.257143,
+   "y": 0,
+   "n_train": 21
+  },
+  {
+   "qid": "G1477",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-02-09",
+   "p_model": 0.025825,
+   "band_lo": 0.023397,
+   "band_hi": 0.028502,
+   "p_crowd": 0.25,
+   "p_base": 0.241379,
+   "y": 0,
+   "n_train": 17
+  },
+  {
+   "qid": "G1477",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-04-21",
+   "p_model": 0.020197,
+   "band_lo": 0.018293,
+   "band_hi": 0.022297,
+   "p_crowd": 0.1,
+   "p_base": 0.254237,
+   "y": 0,
+   "n_train": 17
+  },
+  {
+   "qid": "G1477",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-03",
+   "p_model": 0.078969,
+   "band_lo": 0.071731,
+   "band_hi": 0.086903,
+   "p_crowd": 0.12,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1477",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-14",
+   "p_model": 0.048073,
+   "band_lo": 0.043599,
+   "band_hi": 0.052993,
+   "p_crowd": 0.07,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1477",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-11-25",
+   "p_model": 0.014222,
+   "band_lo": 0.012877,
+   "band_hi": 0.015705,
+   "p_crowd": 0.03,
+   "p_base": 0.257143,
+   "y": 0,
+   "n_train": 21
+  },
+  {
+   "qid": "G1491",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-02-21",
+   "p_model": 0.024889,
+   "band_lo": 0.022548,
+   "band_hi": 0.027471,
+   "p_crowd": 0.17,
+   "p_base": 0.241379,
+   "y": 0,
+   "n_train": 17
+  },
+  {
+   "qid": "G1491",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-05-01",
+   "p_model": 0.019413,
+   "band_lo": 0.017582,
+   "band_hi": 0.021432,
+   "p_crowd": 0.1,
+   "p_base": 0.254237,
+   "y": 0,
+   "n_train": 17
+  },
+  {
+   "qid": "G1491",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-10",
+   "p_model": 0.076051,
+   "band_lo": 0.06907,
+   "band_hi": 0.083705,
+   "p_crowd": 0.12,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1491",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-18",
+   "p_model": 0.04635,
+   "band_lo": 0.042034,
+   "band_hi": 0.051098,
+   "p_crowd": 0.08,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1491",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-11-27",
+   "p_model": 0.013458,
+   "band_lo": 0.012185,
+   "band_hi": 0.014863,
+   "p_crowd": 0.04,
+   "p_base": 0.257143,
+   "y": 0,
+   "n_train": 21
+  },
+  {
+   "qid": "G1892",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-01-13",
+   "p_model": 0.017692,
+   "band_lo": 0.016022,
+   "band_hi": 0.019534,
+   "p_crowd": 0.01,
+   "p_base": 0.236842,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1892",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-01-27",
+   "p_model": 0.013659,
+   "band_lo": 0.012368,
+   "band_hi": 0.015085,
+   "p_crowd": 0.03,
+   "p_base": 0.236842,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1892",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-02-09",
+   "p_model": 0.0099,
+   "band_lo": 0.008962,
+   "band_hi": 0.010935,
+   "p_crowd": 0.01,
+   "p_base": 0.236842,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1892",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-02-23",
+   "p_model": 0.005835,
+   "band_lo": 0.005282,
+   "band_hi": 0.006447,
+   "p_crowd": 0.01,
+   "p_base": 0.233766,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1892",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-03-08",
+   "p_model": 0.002046,
+   "band_lo": 0.001852,
+   "band_hi": 0.002261,
+   "p_crowd": 0.01,
+   "p_base": 0.233766,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1652",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-07-11",
+   "p_model": 0.112481,
+   "band_lo": 0.102345,
+   "band_hi": 0.123549,
+   "p_crowd": 0.08,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1652",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-09-08",
+   "p_model": 0.088495,
+   "band_lo": 0.080422,
+   "band_hi": 0.097334,
+   "p_crowd": 0.06,
+   "p_base": 0.28125,
+   "y": 0,
+   "n_train": 18
+  },
+  {
+   "qid": "G1652",
+   "event_class": "CONFRONTATION",
+   "asof": "2020-11-06",
+   "p_model": 0.054953,
+   "band_lo": 0.049856,
+   "band_hi": 0.060554,
+   "p_crowd": 0.055,
+   "p_base": 0.257143,
+   "y": 0,
+   "n_train": 21
+  },
+  {
+   "qid": "G1652",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-01-03",
+   "p_model": 0.025422,
+   "band_lo": 0.023031,
+   "band_hi": 0.028058,
+   "p_crowd": 0.05,
+   "p_base": 0.236842,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1652",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-03-03",
+   "p_model": 0.00845,
+   "band_lo": 0.007649,
+   "band_hi": 0.009335,
+   "p_crowd": 0.025,
+   "p_base": 0.233766,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "M6792",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-03-23",
+   "p_model": 0.260512,
+   "band_lo": 0.238966,
+   "band_hi": 0.283615,
+   "p_crowd": 0.45,
+   "p_base": 0.240506,
+   "y": 0,
+   "n_train": 25
+  },
+  {
+   "qid": "M6792",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-04-17",
+   "p_model": 0.242342,
+   "band_lo": 0.222066,
+   "band_hi": 0.264136,
+   "p_crowd": 0.41,
+   "p_base": 0.240964,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "M6792",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-05-13",
+   "p_model": 0.233516,
+   "band_lo": 0.21387,
+   "band_hi": 0.254657,
+   "p_crowd": 0.27,
+   "p_base": 0.240964,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "M6792",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-06-07",
+   "p_model": 0.224932,
+   "band_lo": 0.205909,
+   "band_hi": 0.245426,
+   "p_crowd": 0.27,
+   "p_base": 0.255814,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "M6792",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-07-03",
+   "p_model": 0.215903,
+   "band_lo": 0.197543,
+   "band_hi": 0.235706,
+   "p_crowd": 0.2,
+   "p_base": 0.252874,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G2016",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-05-27",
+   "p_model": 0.024637,
+   "band_lo": 0.022319,
+   "band_hi": 0.027193,
+   "p_crowd": 0.715,
+   "p_base": 0.240964,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G2016",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-06-09",
+   "p_model": 0.018973,
+   "band_lo": 0.017183,
+   "band_hi": 0.020947,
+   "p_crowd": 0.435,
+   "p_base": 0.255814,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G2016",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-06-21",
+   "p_model": 0.013714,
+   "band_lo": 0.012417,
+   "band_hi": 0.015146,
+   "p_crowd": 0.95,
+   "p_base": 0.255814,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G2016",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-07-03",
+   "p_model": 0.008428,
+   "band_lo": 0.007629,
+   "band_hi": 0.00931,
+   "p_crowd": 0.45,
+   "p_base": 0.252874,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G2016",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-07-16",
+   "p_model": 0.002669,
+   "band_lo": 0.002416,
+   "band_hi": 0.00295,
+   "p_crowd": 0.1,
+   "p_base": 0.252874,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "M7504",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-07-18",
+   "p_model": 0.029669,
+   "band_lo": 0.026884,
+   "band_hi": 0.032738,
+   "p_crowd": 0.49,
+   "p_base": 0.247191,
+   "y": 0,
+   "n_train": 27
+  },
+  {
+   "qid": "M7504",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-08-12",
+   "p_model": 0.023477,
+   "band_lo": 0.021266,
+   "band_hi": 0.025913,
+   "p_crowd": 0.35,
+   "p_base": 0.241758,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "M7504",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-09-06",
+   "p_model": 0.019355,
+   "band_lo": 0.017529,
+   "band_hi": 0.021368,
+   "p_crowd": 0.35,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "M7504",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-10-01",
+   "p_model": 0.015215,
+   "band_lo": 0.013777,
+   "band_hi": 0.016802,
+   "p_crowd": 0.2,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "M7504",
+   "event_class": "CEASEFIRE",
+   "asof": "2021-10-26",
+   "p_model": 0.011058,
+   "band_lo": 0.010011,
+   "band_hi": 0.012214,
+   "p_crowd": 0.15,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G1927",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-03-07",
+   "p_model": 0.075698,
+   "band_lo": 0.068748,
+   "band_hi": 0.083319,
+   "p_crowd": 0.15,
+   "p_base": 0.233766,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1927",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-05-06",
+   "p_model": 0.054165,
+   "band_lo": 0.049139,
+   "band_hi": 0.059688,
+   "p_crowd": 0.065,
+   "p_base": 0.240964,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G1927",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-07-05",
+   "p_model": 0.038922,
+   "band_lo": 0.035285,
+   "band_hi": 0.042927,
+   "p_crowd": 0.04,
+   "p_base": 0.252874,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G1927",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-09-02",
+   "p_model": 0.023316,
+   "band_lo": 0.021121,
+   "band_hi": 0.025737,
+   "p_crowd": 0.03,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G1927",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-11-01",
+   "p_model": 0.007833,
+   "band_lo": 0.007091,
+   "band_hi": 0.008654,
+   "p_crowd": 0.05,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G1910",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-02-24",
+   "p_model": 0.086989,
+   "band_lo": 0.079047,
+   "band_hi": 0.095686,
+   "p_crowd": 0.05,
+   "p_base": 0.233766,
+   "y": 0,
+   "n_train": 24
+  },
+  {
+   "qid": "G1910",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-05-04",
+   "p_model": 0.062445,
+   "band_lo": 0.056674,
+   "band_hi": 0.068781,
+   "p_crowd": 0.045,
+   "p_base": 0.240964,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G1910",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-07-12",
+   "p_model": 0.045049,
+   "band_lo": 0.04085,
+   "band_hi": 0.049667,
+   "p_crowd": 0.03,
+   "p_base": 0.252874,
+   "y": 0,
+   "n_train": 26
+  },
+  {
+   "qid": "G1910",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-09-19",
+   "p_model": 0.026894,
+   "band_lo": 0.024366,
+   "band_hi": 0.02968,
+   "p_crowd": 0.02,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G1910",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-11-27",
+   "p_model": 0.009091,
+   "band_lo": 0.008229,
+   "band_hi": 0.010042,
+   "p_crowd": 0.01,
+   "p_base": 0.226804,
+   "y": 0,
+   "n_train": 29
+  },
+  {
+   "qid": "G2084",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-08-08",
+   "p_model": 0.037549,
+   "band_lo": 0.034037,
+   "band_hi": 0.041415,
+   "p_crowd": 0.015,
+   "p_base": 0.244444,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G2084",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-09-10",
+   "p_model": 0.029187,
+   "band_lo": 0.026447,
+   "band_hi": 0.032207,
+   "p_crowd": 0.01,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G2084",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-10-12",
+   "p_model": 0.021009,
+   "band_lo": 0.019029,
+   "band_hi": 0.023193,
+   "p_crowd": 0.01,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G2084",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-11-13",
+   "p_model": 0.012704,
+   "band_lo": 0.011502,
+   "band_hi": 0.014031,
+   "p_crowd": 0.01,
+   "p_base": 0.226804,
+   "y": 0,
+   "n_train": 29
+  },
+  {
+   "qid": "G2084",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-12-16",
+   "p_model": 0.003889,
+   "band_lo": 0.00352,
+   "band_hi": 0.004297,
+   "p_crowd": 0.0,
+   "p_base": 0.232323,
+   "y": 0,
+   "n_train": 30
+  },
+  {
+   "qid": "G2097",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-09-01",
+   "p_model": 0.042331,
+   "band_lo": 0.038381,
+   "band_hi": 0.046677,
+   "p_crowd": 0.095,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G2097",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-10-07",
+   "p_model": 0.03325,
+   "band_lo": 0.030134,
+   "band_hi": 0.036683,
+   "p_crowd": 0.08,
+   "p_base": 0.23913,
+   "y": 0,
+   "n_train": 28
+  },
+  {
+   "qid": "G2097",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-11-13",
+   "p_model": 0.023719,
+   "band_lo": 0.021487,
+   "band_hi": 0.026181,
+   "p_crowd": 0.06,
+   "p_base": 0.226804,
+   "y": 0,
+   "n_train": 29
+  },
+  {
+   "qid": "G2097",
+   "event_class": "CONFRONTATION",
+   "asof": "2021-12-20",
+   "p_model": 0.013306,
+   "band_lo": 0.012047,
+   "band_hi": 0.014695,
+   "p_crowd": 0.045,
+   "p_base": 0.232323,
+   "y": 0,
+   "n_train": 30
+  },
+  {
+   "qid": "G2097",
+   "event_class": "CONFRONTATION",
+   "asof": "2022-01-25",
+   "p_model": 0.004144,
+   "band_lo": 0.00375,
+   "band_hi": 0.004579,
+   "p_crowd": 0.01,
+   "p_base": 0.238095,
+   "y": 0,
+   "n_train": 32
+  }
+ ],
+ "ablations": {
+  "no_pooling": {
+   "n": 126,
+   "n_questions": 28,
+   "mean_brier": {
+    "model": 0.0818,
+    "crowd": 0.0856,
+    "base_rate": 0.1055,
+    "uniform": 0.25
+   },
+   "skill_vs_crowd": 0.0442,
+   "reliability": [
+    {
+     "bin": "0.0-0.1",
+     "n": 120,
+     "mean_outcome": 0.0833
+    },
+    {
+     "bin": "0.1-0.2",
+     "n": 1,
+     "mean_outcome": 0.0
+    },
+    {
+     "bin": "0.2-0.3",
+     "n": 5,
+     "mean_outcome": 0.0
+    },
+    {
+     "bin": "0.3-0.4",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.4-0.5",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.5-0.6",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.6-0.7",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.7-0.8",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.8-0.9",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.9-1.0",
+     "n": 0,
+     "mean_outcome": null
+    }
+   ],
+   "band_width_mean": 0.0048,
+   "band_error_rank_corr": 0.7647
+  },
+  "no_classes": {
+   "n": 126,
+   "n_questions": 28,
+   "mean_brier": {
+    "model": 0.0781,
+    "crowd": 0.0856,
+    "base_rate": 0.1055,
+    "uniform": 0.25
+   },
+   "skill_vs_crowd": 0.0869,
+   "reliability": [
+    {
+     "bin": "0.0-0.1",
+     "n": 108,
+     "mean_outcome": 0.0926
+    },
+    {
+     "bin": "0.1-0.2",
+     "n": 13,
+     "mean_outcome": 0.0
+    },
+    {
+     "bin": "0.2-0.3",
+     "n": 5,
+     "mean_outcome": 0.0
+    },
+    {
+     "bin": "0.3-0.4",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.4-0.5",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.5-0.6",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.6-0.7",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.7-0.8",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.8-0.9",
+     "n": 0,
+     "mean_outcome": null
+    },
+    {
+     "bin": "0.9-1.0",
+     "n": 0,
+     "mean_outcome": null
+    }
+   ],
+   "band_width_mean": 0.0098,
+   "band_error_rank_corr": 0.852
+  }
+ }
+}
