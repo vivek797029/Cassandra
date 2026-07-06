@@ -34,3 +34,6 @@ frontend/react/node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Real-eval corpus (fetched, not committed — scripts/fetch_real_data.sh)
+data/real/
